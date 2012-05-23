@@ -48,8 +48,8 @@ then
 echo "mysql service is really not running, checked 5 times"
 ssh $master $START
 /usr/sbin/sendmail -oi -t << EOF
-From: Production_NIC_Master
-To: kannan.s@nic.in,dpmisra@nic.in,nk.jain@nic.in
+From: Production_Master
+To: nic-ogpl@nic.in,opengovplatform@gmail.com
 Subject: Alert, Mysql master service on $master was down
 
 FYI, Master MySQL services were not accessible. Took necessary action and started service. please check replication on slaves.
@@ -124,8 +124,8 @@ sh /home/master-failure-application-pointing-script.sh > /mnt/scriptslog/master-
 ##
 
 /usr/sbin/sendmail -oi -t << EOF
-From: Production_NIC_Master
-To: kannan.s@nic.in,dpmisra@nic.in,nk.jain@nic.in
+From: Production_Master
+To: nic-ogpl@nic.in,opengovplatform@gmail.com
 Subject: Alert, Master MySQL $master services are not accessible.
 
 Alert, Master MySQL services are not accessible. Took necessary action and made changes in /etc/hosts on all servers.
@@ -202,8 +202,8 @@ echo done
 sh /home/master-failure-application-pointing-script.sh > /mnt/scriptslog/master-failure-application-pointing-script.log
 
 /usr/sbin/sendmail -oi -t << EOF
-From: Production_NIC_Master
-To: kannan.s@nic.in,dpmisra@nic.in,nk.jain@nic.in
+From: Production_Master
+To: nic-ogpl@nic.in,opengovplatform@gmail.com
 Subject: Alert, Master MySQL $master queries in queue
 
 Alert,Though system showing mysql master is running,we did not get the output of our default query means there are lot of queries in queue. Took necessary action and made changes in /etc/hosts files

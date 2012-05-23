@@ -27,7 +27,7 @@ scp $etchost root@$lb1:$etchost || { echo "Not able to connect to $lb1 frontend"
 
 /usr/sbin/sendmail -oi -t << EOF
 From: Production_environment_monitor
-To: kannan.s@nic.in,dpmisra@nic.in,nk.jain@nic.in
+To: nic-ogpl@nic.in,opengovplatform@gmail.com
 Subject: Alert,demodata and demodatacms applications pointed to new master server
 
 FYI, Mysql service from master was not accessible. Took necessary action and tried to restart it but could not able to start it so ran mysql promote scripts on slave server and pointed all FEs to new master.

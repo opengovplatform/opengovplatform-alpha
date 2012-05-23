@@ -25,7 +25,7 @@ then
 
 /usr/sbin/sendmail -oi -t << EOF
 From:Production Slave
-To: kannan.s@nic.in,dpmisra@nic.in,nk.jain@nic.in
+To: to nic-ogpl@nic.in,opengovplatform@gmail.com
 Subject: Alert, Replication not working on Production slave
 
 Alert, Replication not working on slave. Please login to the system to check issue.
