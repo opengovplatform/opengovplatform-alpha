@@ -29,25 +29,13 @@ function download_by_category_organisation_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'field_ds_file_fid' => array(
-      'label' => 'File',
+    'field_ds_datafile_fid' => array(
+      'label' => 'Datafile',
       'required' => 0,
       'delta' => -1,
-      'id' => 'field_ds_file_fid',
-      'table' => 'node_data_field_ds_file',
-      'field' => 'field_ds_file_fid',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-    ),
-    'field_sa_subagency_agency_nid' => array(
-      'label' => 'Agency',
-      'required' => 0,
-      'delta' => -1,
-      'id' => 'field_sa_subagency_agency_nid',
-      'table' => 'node_data_field_sa_subagency_agency',
-      'field' => 'field_sa_subagency_agency_nid',
+      'id' => 'field_ds_datafile_fid',
+      'table' => 'node_data_field_ds_datafile',
+      'field' => 'field_ds_datafile_fid',
       'override' => array(
         'button' => 'Override',
       ),
@@ -165,7 +153,7 @@ function download_by_category_organisation_views_default_views() {
       'field' => 'nid',
       'relationship' => 'none',
     ),
-    'dcid' => array(
+    'downloads' => array(
       'label' => 'Number Of Downloads',
       'alter' => array(
         'alter_text' => 0,
@@ -190,50 +178,21 @@ function download_by_category_organisation_views_default_views() {
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
+      'set_precision' => FALSE,
+      'precision' => 0,
+      'decimal' => '.',
+      'separator' => ',',
+      'format_plural' => 0,
+      'format_plural_singular' => '1',
+      'format_plural_plural' => '@count',
+      'prefix' => '',
+      'suffix' => '',
       'exclude' => 0,
-      'id' => 'dcid',
-      'table' => 'download_count',
-      'field' => 'dcid',
-      'relationship' => 'none',
-    ),
-    'views_sql_groupedfields' => array(
-      'label' => 'Group By Fields',
-      'alter' => array(
-        'alter_text' => FALSE,
-        'text' => '',
-        'make_link' => FALSE,
-        'path' => '',
-        'absolute' => '',
-        'alt' => '',
-        'rel' => '',
-        'link_class' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'trim' => FALSE,
-        'max_length' => '',
-        'word_boundary' => TRUE,
-        'ellipsis' => TRUE,
-        'strip_tags' => FALSE,
-        'html' => FALSE,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => '1',
-      'id' => 'views_sql_groupedfields',
-      'table' => 'views_groupby',
-      'field' => 'views_sql_groupedfields',
-      'relationship' => 'none',
-      'views_groupby_fields_to_group' => array(
-        'nid' => 'nid',
-      ),
-      'views_groupby_sql_function' => 'count',
-      'views_groupby_fields_to_aggregate' => array(
-        'dcid' => 'dcid',
-      ),
-      'views_groupby_field_sortby' => 'dcid',
-      'views_groupby_sortby_direction' => 'desc',
+      'id' => 'downloads',
+      'table' => 'files',
+      'field' => 'downloads',
+      'relationship' => 'field_ds_datafile_fid',
     ),
   ));
   $handler->override_option('sorts', array(
@@ -242,7 +201,10 @@ function download_by_category_organisation_views_default_views() {
       'id' => 'downloads',
       'table' => 'files',
       'field' => 'downloads',
-      'relationship' => 'field_ds_file_fid',
+      'relationship' => 'field_ds_datafile_fid',
+      'override' => array(
+        'button' => 'Override',
+      ),
     ),
   ));
   $handler->override_option('filters', array(
@@ -294,6 +256,23 @@ function download_by_category_organisation_views_default_views() {
       'table' => 'node',
       'field' => 'status',
       'relationship' => 'none',
+    ),
+    'status_1' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status_1',
+      'table' => 'node',
+      'field' => 'status',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'field_ds_agency_name_nid',
     ),
   ));
   $handler->override_option('access', array(
@@ -456,7 +435,7 @@ function download_by_category_organisation_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'dcid' => array(
+    'downloads' => array(
       'label' => 'Number Of Downloads',
       'alter' => array(
         'alter_text' => 0,
@@ -481,56 +460,24 @@ function download_by_category_organisation_views_default_views() {
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
+      'set_precision' => FALSE,
+      'precision' => 0,
+      'decimal' => '.',
+      'separator' => ',',
+      'format_plural' => 0,
+      'format_plural_singular' => '1',
+      'format_plural_plural' => '@count',
+      'prefix' => '',
+      'suffix' => '',
       'exclude' => 0,
-      'id' => 'dcid',
-      'table' => 'download_count',
-      'field' => 'dcid',
+      'id' => 'downloads',
+      'table' => 'files',
+      'field' => 'downloads',
+      'relationship' => 'field_ds_datafile_fid',
       'override' => array(
         'button' => 'Use default',
       ),
-      'relationship' => 'none',
-    ),
-    'views_sql_groupedfields' => array(
-      'label' => 'Group By Fields',
-      'alter' => array(
-        'alter_text' => FALSE,
-        'text' => '',
-        'make_link' => FALSE,
-        'path' => '',
-        'absolute' => '',
-        'alt' => '',
-        'rel' => '',
-        'link_class' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'trim' => FALSE,
-        'max_length' => '',
-        'word_boundary' => TRUE,
-        'ellipsis' => TRUE,
-        'strip_tags' => FALSE,
-        'html' => FALSE,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => '1',
-      'id' => 'views_sql_groupedfields',
-      'table' => 'views_groupby',
-      'field' => 'views_sql_groupedfields',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-      'views_groupby_fields_to_group' => array(
-        'nid' => 'nid',
-      ),
-      'views_groupby_sql_function' => 'count',
-      'views_groupby_fields_to_aggregate' => array(
-        'dcid' => 'dcid',
-      ),
-      'views_groupby_field_sortby' => 'dcid',
-      'views_groupby_sortby_direction' => 'desc',
     ),
   ));
   $handler->override_option('header', '<?php
@@ -554,8 +501,7 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
       'field_agency_name_value' => 'field_agency_name_value',
       'nid' => 'nid',
       'nid_1' => 'nid_1',
-      'dcid' => 'dcid',
-      'views_sql_groupedfields' => 'views_sql_groupedfields',
+      'downloads' => 'downloads',
     ),
     'info' => array(
       'field_agency_name_value' => array(
@@ -570,15 +516,12 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
         'sortable' => 0,
         'separator' => '',
       ),
-      'dcid' => array(
+      'downloads' => array(
         'sortable' => 1,
         'separator' => '',
       ),
-      'views_sql_groupedfields' => array(
-        'separator' => '',
-      ),
     ),
-    'default' => '-1',
+    'default' => 'downloads',
   ));
   $handler->override_option('path', 'visitorstats/downloadbyagency');
   $handler->override_option('menu', array(
@@ -779,7 +722,7 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
       ),
       'relationship' => 'none',
     ),
-    'dcid' => array(
+    'downloads' => array(
       'label' => 'Number Of Downloads',
       'alter' => array(
         'alter_text' => 0,
@@ -804,56 +747,24 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
+      'set_precision' => FALSE,
+      'precision' => 0,
+      'decimal' => '.',
+      'separator' => ',',
+      'format_plural' => 0,
+      'format_plural_singular' => '1',
+      'format_plural_plural' => '@count',
+      'prefix' => '',
+      'suffix' => '',
       'exclude' => 0,
-      'id' => 'dcid',
-      'table' => 'download_count',
-      'field' => 'dcid',
+      'id' => 'downloads',
+      'table' => 'files',
+      'field' => 'downloads',
+      'relationship' => 'field_ds_datafile_fid',
       'override' => array(
         'button' => 'Use default',
       ),
-      'relationship' => 'none',
-    ),
-    'views_sql_groupedfields' => array(
-      'label' => 'Group By Fields',
-      'alter' => array(
-        'alter_text' => FALSE,
-        'text' => '',
-        'make_link' => FALSE,
-        'path' => '',
-        'absolute' => '',
-        'alt' => '',
-        'rel' => '',
-        'link_class' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'trim' => FALSE,
-        'max_length' => '',
-        'word_boundary' => TRUE,
-        'ellipsis' => TRUE,
-        'strip_tags' => FALSE,
-        'html' => FALSE,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => '1',
-      'id' => 'views_sql_groupedfields',
-      'table' => 'views_groupby',
-      'field' => 'views_sql_groupedfields',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-      'views_groupby_fields_to_group' => array(
-        'nid' => 'nid',
-      ),
-      'views_groupby_sql_function' => 'count',
-      'views_groupby_fields_to_aggregate' => array(
-        'dcid' => 'dcid',
-      ),
-      'views_groupby_field_sortby' => 'dcid',
-      'views_groupby_sortby_direction' => 'desc',
     ),
   ));
   $handler->override_option('style_options', array(
@@ -866,8 +777,7 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
       'field_agency_name_value' => 'field_agency_name_value',
       'nid' => 'nid',
       'nid_1' => 'nid_1',
-      'dcid' => 'dcid',
-      'views_sql_groupedfields' => 'views_sql_groupedfields',
+      'downloads' => 'downloads',
     ),
     'info' => array(
       'field_agency_name_value' => array(
@@ -882,15 +792,12 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
         'sortable' => 0,
         'separator' => '',
       ),
-      'dcid' => array(
+      'downloads' => array(
         'sortable' => 1,
         'separator' => '',
       ),
-      'views_sql_groupedfields' => array(
-        'separator' => '',
-      ),
     ),
-    'default' => '-1',
+    'default' => 'downloads',
   ));
   $handler->override_option('path', 'visitorstats/downloadbyagency/pdf');
   $handler->override_option('menu', array(
@@ -933,13 +840,13 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
         'button' => 'Override',
       ),
     ),
-    'field_ds_file_fid' => array(
-      'label' => 'File',
+    'field_ds_datafile_fid' => array(
+      'label' => 'Datafile',
       'required' => 0,
       'delta' => -1,
-      'id' => 'field_ds_file_fid',
-      'table' => 'node_data_field_ds_file',
-      'field' => 'field_ds_file_fid',
+      'id' => 'field_ds_datafile_fid',
+      'table' => 'node_data_field_ds_datafile',
+      'field' => 'field_ds_datafile_fid',
       'relationship' => 'none',
     ),
   ));
@@ -985,7 +892,7 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
       'relationship' => 'field_ds_sector_nid',
     ),
     'downloads' => array(
-      'label' => 'Download count',
+      'label' => 'Number Of Downloads',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
@@ -1009,6 +916,7 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'set_precision' => FALSE,
       'precision' => 0,
       'decimal' => '.',
@@ -1018,11 +926,11 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
       'format_plural_plural' => '@count',
       'prefix' => '',
       'suffix' => '',
-      'exclude' => 1,
+      'exclude' => 0,
       'id' => 'downloads',
       'table' => 'files',
       'field' => 'downloads',
-      'relationship' => 'field_ds_file_fid',
+      'relationship' => 'field_ds_datafile_fid',
       'override' => array(
         'button' => 'Override',
       ),
@@ -1094,81 +1002,14 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
         'button' => 'Override',
       ),
     ),
-    'dcid' => array(
-      'label' => 'Number Of Downloads',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'absolute' => 0,
-        'link_class' => '',
-        'alt' => '',
-        'rel' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => 0,
-      'id' => 'dcid',
-      'table' => 'download_count',
-      'field' => 'dcid',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-    ),
-    'views_sql_groupedfields' => array(
-      'label' => 'Group By Fields',
-      'alter' => array(
-        'alter_text' => FALSE,
-        'text' => '',
-        'make_link' => FALSE,
-        'path' => '',
-        'absolute' => '',
-        'alt' => '',
-        'rel' => '',
-        'link_class' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'trim' => FALSE,
-        'max_length' => '',
-        'word_boundary' => TRUE,
-        'ellipsis' => TRUE,
-        'strip_tags' => FALSE,
-        'html' => FALSE,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => '1',
-      'id' => 'views_sql_groupedfields',
-      'table' => 'views_groupby',
-      'field' => 'views_sql_groupedfields',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-      'views_groupby_fields_to_group' => array(
-        'nid' => 'nid',
-      ),
-      'views_groupby_sql_function' => 'count',
-      'views_groupby_fields_to_aggregate' => array(
-        'dcid' => 'dcid',
-      ),
-      'views_groupby_field_sortby' => 'dcid',
-      'views_groupby_sortby_direction' => 'desc',
+  ));
+  $handler->override_option('sorts', array(
+    'downloads' => array(
+      'order' => 'DESC',
+      'id' => 'downloads',
+      'table' => 'files',
+      'field' => 'downloads',
+      'relationship' => 'field_ds_datafile_fid',
     ),
   ));
   $handler->override_option('filters', array(
@@ -1232,12 +1073,13 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
   $handler->override_option('empty_format', '1');
   $handler->override_option('items_per_page', 0);
   $handler->override_option('use_pager', '0');
+  $handler->override_option('distinct', 0);
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
     'grouping' => '',
     'override' => 1,
     'sticky' => 0,
-    'order' => 'asc',
+    'order' => 'desc',
     'summary' => '',
     'columns' => array(
       'field_sector_title_value' => 'field_sector_title_value',
@@ -1247,11 +1089,11 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
     ),
     'info' => array(
       'field_sector_title_value' => array(
-        'sortable' => 0,
+        'sortable' => 1,
         'separator' => '',
       ),
       'downloads' => array(
-        'sortable' => 0,
+        'sortable' => 1,
         'separator' => '',
       ),
       'nid' => array(
@@ -1263,7 +1105,7 @@ print \'<a title="PDF Download" style="Padding-left:3px;" class="hyperlink"  hre
         'separator' => '',
       ),
     ),
-    'default' => '-1',
+    'default' => 'downloads',
   ));
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->override_option('header', '<?php

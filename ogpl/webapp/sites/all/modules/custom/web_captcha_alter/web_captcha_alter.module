@@ -1,40 +1,67 @@
 <?php
 
-function web_captcha_alter_form_alter($form,&$form_state) {
-//var_dump($form);
-if($form["captcha"])
-{  $form["captcha"]['#weight']='4';
-   $form['verification'] = array(
-            '#type'=>'item',
-            '#value' => '<label class="captcha-text">Verification <span class="form-required" title="This field is required.">(Required)</span> :</label>',
-            '#prefix' => '<div class="verification-msg">',
-            '#suffix' => '</div>',
-            '#weight'=> '3',
-        );
+function web_captcha_alter_form_alter($form, &$form_state, $form_id) {
+  if ($form["captcha"]) {
+    $form["captcha"]['#weight'] = '4';
+    $form['verification'] = web_captcha_alter_get_verification_element(3);
+  }
+
+  if ($form["contact-owner"]["captcha"]) {
+    $form["contact-owner"]["captcha"]['#weight'] = '1';
+    $form["contact-owner"]['verification'] = web_captcha_alter_get_verification_element(0);
+  }
+
+  if ($form["buttons"]["captcha"]) {
+    $form['verification'] = web_captcha_alter_get_verification_element(55);
+  }
+
+  if ($form['actions']['captcha']) {
+    $form['actions']['verification'] = web_captcha_alter_get_verification_element(4);
+  }
+
+  switch ($form_id) {
+    case 'user_login':
+      $form['#after_build'][] = 'web_captcha_alter_reorder_login_form';
+      break;
+    case 'workflow_tab_form':
+      $form['#after_build'][] = 'web_captcha_alter_reorder_workflow_tab_form';
+      break;
+  }
+  module_load_include('module', 'captcha_after');
+  $ca_settings = captcha_after_get_forms_settings($form_id);
+  if($ca_settings['enable']){
+  $form['#pre_render'][] = 'web_captcha_alter_form_pre_render';}
 }
 
-if($form["contact-owner"]["captcha"])
-{  $form["contact-owner"]["captcha"]['#weight']='0';
-   $form["contact-owner"]['verification'] = array(
-            '#type'=>'item',
-            '#value' => '<label class="captcha-text">Verification <span class="form-required" title="This field is required.">(Required)</span> :</label>',
-            '#prefix' => '<div class="verification-msg">',
-            '#suffix' => '</div>',
-            '#weight'=>'1',
-        );
+function web_captcha_alter_get_verification_element($weight) {
+  return array(
+    '#type' => 'item',
+    '#value' => '<label class="captcha-text">Verification <span class="form-required" title="This field is required.">(Required)</span> :</label>',
+    '#prefix' => '<div class="verification-msg">',
+    '#suffix' => '</div>',
+    '#weight' => $weight,
+  );
 }
 
-if($form["buttons"]["captcha"])
- {
-   $form['verification'] = array(
-            '#type'=>'item',
-            '#value' => '<label class="captcha-text">Verification <span class="form-required" title="This field is required.">(Required)</span> :</label>',
-            '#prefix' => '<div class="verification-msg">',
-            '#suffix' => '</div>',
-            '#weight'=> '4',
-        );
+function web_captcha_alter_form_pre_render($form) {
+  module_load_include('module', 'captcha_after');
+  $form['verification']['#access'] = captcha_after_show_captcha($form['form_id']['#value']);
+  return $form;
+}
 
- }
+function web_captcha_alter_reorder_login_form($form, &$form_state) {
+  $form['name']['#weight'] = -5;
+  $form['pass']['#weight'] = -4;
+  $form["verification"]['#weight'] = -3;
+  $form['captcha']['#weight'] = -2;
+  $form['submit']['#weight'] = -1;
+  return $form;
+}
 
-
+function web_captcha_alter_reorder_workflow_tab_form($form, &$form_state) {
+  $form["workflow"]['#weight'] = 1;
+  $form["captcha"]['#weight'] = 4;
+  $form["submit"]['#weight'] = 5;
+  $form["cancel"]['#weight'] = 5;
+  return $form;
 }

@@ -28,7 +28,6 @@
  * @ingroup views_templates
  */
 ?>
-
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
 function getAbsolutePath() {
@@ -37,31 +36,21 @@ function getAbsolutePath() {
     return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
 }
 function getCompletePath() {
-     var loc = window.location;
+    var loc = window.location;
 	var pathName;
 	if(window.location.href.lastIndexOf('&itemcount')==-1)
      return window.location.href;
      else
 	 return window.location.href.substring(0,window.location.href.lastIndexOf('&itemcount'));
 }
-
 function itemsperpage(itemcount)
 {
-//alert( document.URL+'?itemcount='+itemcount );
-//alert(jQuery(location).attr('href'));
-//alert(getAbsolutePath()+'/downloadbycatagories'+'?itemcount='+itemcount);
 var selObj = document.getElementById('itemcount');
-//alert(document.getElementById(itemcount));
 $('#'+itemcount).attr('selected',true);
-//selObj.options[itemcount].selected=true;
-//if(window.location.href.indexOf('?')==-1)
 window.location=getAbsolutePath()+'downloadbycategory' +'?&itemcount='+itemcount;
-//else
-//window.location=getCompletePath()+'&itemcount='+itemcount ;
 }
 //--><!]]>
 </script>
-
 
 <div class="<?php print $classes; ?>">
   <?php if ($admin_links): ?>
@@ -70,11 +59,9 @@ window.location=getAbsolutePath()+'downloadbycategory' +'?&itemcount='+itemcount
     </div>
   <?php endif; ?>
 
-  
 <?php
 global $base_url;
 $this_page = drupal_get_path_alias($_GET['q']);
-//echo $this_page;
 print '<div class="catalog-tabs-menu">';
   print '<ul class="catalog-tabs catalog-adjust">';
  if($this_page=='visitorstats/downloadbycategory')
@@ -94,7 +81,7 @@ print'</div>';
   <?php print $header; ?>
 </div>
 <?php endif; ?>
-<?
+<?php
 print'<div class="metrics-category-report-border">';
 print'<h1 class="view-header metrics-visitorstats-table-heading">';
 print'Downloads by Category</h1>';
@@ -106,8 +93,8 @@ $selected_count=$_GET['itemcount'];
 
 
 print '<div style="display:none;" class="metrics-result-per-page-dropdown cBoth switch-js-enabled">';
-print '<label for="itemcount" >Results per page: </label>';
-print '<select id="itemcount" name="itemcount"onchange="itemsperpage(this.options[this.options.selectedIndex].value);">';
+print '<label for="itemcount">Results per page: </label>';
+print '<select id="itemcount" name="itemcount" onchange="itemsperpage(this.options[this.options.selectedIndex].value);">';
 foreach($select_options as $key=>$value)
 	{ 
 		if($selected_count == $select_options[$value]) {
@@ -120,7 +107,6 @@ foreach($select_options as $key=>$value)
 	}
 print '</select>';
 print '</div>';
-
 
 $count=10;
 $count=$_GET['itemcount'];
@@ -142,13 +128,13 @@ else
 print '<a title="Show 100 results per page" href="'.$base_url.'/visitorstats/downloadbycategory?&amp;itemcount=100"> 100 </a>';
 
 print '</div>';
-
 ?>
 <?php 
     $view = views_get_current_view();
 	global $pager_total;
 	$total_pages = $pager_total['0'];
-	
+	if(!$total_pages)
+	$total_pages=1;
 	$pno=$_GET['page'];
 	$fpage=0;
 	if(!$pno)
@@ -211,4 +197,4 @@ print '</div>';
 
 </div>
 </div>
- <?php /* class view */ ?>
+<?php /* class view */ ?>

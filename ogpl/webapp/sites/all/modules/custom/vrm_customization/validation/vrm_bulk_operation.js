@@ -48,7 +48,7 @@ $(document).ready(function(){
 	function bulk_validate1()
 		{
 			var selected = false; 
-			$('.vrm-bulk-replied .vbo-select').each(function(){
+			$('.vrm-bulk-replied .form-checkbox').each(function(){
 				if($(this).attr('checked'))
 					selected=true;
 			});
@@ -71,10 +71,11 @@ $(document).ready(function(){
 			}
 			
 		}
+		//.vrm-bulk-reviewed .vbo-select
 	function bulk_validate2()
 		{
 			var selected = false; 
-			$('.vrm-bulk-reviewed .vbo-select').each(function(){
+			$('.vrm-bulk-reviewed .form-checkbox').each(function(){
 				if($(this).attr('checked'))
 					selected=true;
 			});

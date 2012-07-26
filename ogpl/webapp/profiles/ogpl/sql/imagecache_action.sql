@@ -1,1 +1,0 @@
-INSERT IGNORE INTO `imagecache_action` VALUES (1,1,0,'imagecache','imagecache_resize','a:2:{s:5:\"width\";s:3:\"661\";s:6:\"height\";s:3:\"255\";}'),(2,2,0,'imagecache','imagecache_resize','a:2:{s:5:\"width\";s:3:\"500\";s:6:\"height\";s:3:\"294\";}'),(3,3,0,'imagecache','imagecache_resize','a:2:{s:5:\"width\";s:3:\"998\";s:6:\"height\";s:3:\"242\";}');

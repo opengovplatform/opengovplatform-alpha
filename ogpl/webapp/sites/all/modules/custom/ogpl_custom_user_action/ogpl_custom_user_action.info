@@ -1,4 +1,5 @@
+; $Id$
 name = Custom User Actions
 description = Custom User actions
-package = Other
+package = OGPL
 core = 6.x

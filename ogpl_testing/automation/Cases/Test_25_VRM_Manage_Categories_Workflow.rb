@@ -3,11 +3,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'lib/NIC_Lib.rb'
 require 'InputRepository/Config.rb'
 require 'InputRepository/Test_25_VRM_Manage_Categories_Workflow_Input.rb'
@@ -52,20 +52,22 @@ describe "Manage Categories Workflow in the VRM site" do
 		
 		it "To Add new Category and verify in the workflow" do
 			@browser.link(:id, "quicktabs-tab-vrm_manage_categories-1").click
-			@browser.text.should include("Add Category")
 			sleep 5
+			@browser.text.should include("Add Category")
 			@browser.text_field(:id, "edit-name-1").set("#{$add_category}")
 			@browser.text_field(:id, "edit-description").set("#{$description}")
 			@browser.checkbox(:name, "is_contact_cat").set
 			@browser.button(:id, "edit-submit-1").click
-			sleep 5
-			@browser.text.should include("Category Saved")
+			#~ sleep 10
+			#~ @browser.text.should include("Category Saved")
 			sleep 15
 			puts "category added"
 			@browser.link(:id, "quicktabs-tab-vrm_admin_tabs-0").click
 			sleep 10
 			puts "Navigated to list page"
-			@browser.div(:id, "view-id-VRM_all_feedback_list-page_7").link(:text,"Edit").click   
+			#@browser.div(:id, "view-id-VRM_all_feedback_list-page_7").link(:text,"Edit").click 
+			#@browser.link(:xpath, "//*[@id='quicktabs_tabpage_vrm_admin_tabs_list_0']/div/div[2]/table/tbody/tr[1]/td[10]/a[1]").click
+			@browser.link(:xpath, "//*[@id='quicktabs_tabpage_vrm_admin_tabs_list_1']/div/div[2]/table/tbody/tr[1]/td[10]/a[1]").click
 			puts "Navigated to Edit page"
 			sleep 10
 			@browser.text.should include("Feedback Details Edit")
@@ -74,7 +76,7 @@ describe "Manage Categories Workflow in the VRM site" do
 			@browser.text.should include("#{$add_category}")
 			puts "Category displayed in the workflow"
 		end
-		
+
 		#~ it "Verify Contact Category in the workflow when checked" do
 			#~ @browser1.refresh
 			#~ sleep 5
@@ -96,19 +98,23 @@ describe "Manage Categories Workflow in the VRM site" do
 			sleep 15
 			puts "Category list screen"
 		end
-				
+			
 		it "To Edit Category" do
 			@browser.link(:text, "Manage Categories").click
+			sleep 5
 			@browser.text.should include("Category List")
-			sleep 15
-			@browser.div(:id, "view-id-vrm_category_view-page_1").link(:text,"edit").click   # :href=> /admin\/content\/taxonomy\/edit\/term/).click
+			#@browser.link(:text, "edit").click
+			@browser.link(:xpath, "//*[@id='quicktabs_tabpage_vrm_manage_categories_0']/div/div[2]/table/tbody/tr[2]/td[2]/a").click
+			sleep 10
+			#@browser.div(:id, "view-id-vrm_category_view-page_1").link(:text,"edit").click   # :href=> /admin\/content\/taxonomy\/edit\/term/).click
 			@browser.text.should include("Edit Category")
 			@browser.text_field(:id, "edit-name").set("#{$edit_category}")
 			@browser.text_field(:id, "edit-description").set("#{$edit_description}")
 			@browser.checkbox(:name, "is_contact_cat").clear
 			@browser.button(:id, "edit-submit").click
-			@browser.text.should include("Updated term #{$edit_category}")
-			sleep 15
+			sleep 10
+			#@browser.text.should include("Updated term #{$edit_category}")
+			@browser.text.should include("#{$edit_category} successfully edited.")
 			puts "Updated the category name"
 		 end
 	
@@ -121,12 +127,30 @@ describe "Manage Categories Workflow in the VRM site" do
 			#~ @browser1.text.should_not include("#{$add_category}")
 			#~ puts "category not added"
 		#~ end
-		
+
+		it "Send a feedback to be used in next cases" do
+			@browser1.link(:text, "Feedback").click
+			sleep 3
+			@browser1.text_field(:id, "edit-field-sender-name-0-value").set("TestName")
+			@browser1.text_field(:id, "edit-field-email-0-email").set("Name@testemail.com")
+			@browser1.textarea(:id, "edit-field-feedback-body-0-value").set("Feedback text sent from Feedback form")
+			@browser1.button(:value,"Submit").click
+			sleep 5
+			@browser1.text.should include("WHAT HAPPENS TO YOUR FEEDBACK NOW?")
+		end
+
 		it "To verify that edited category and Predefined format text is displayed in the workflow" do
-			@browser.link(:id, "quicktabs-tab-vrm_admin_tabs-0").click
+			sleep 5
+			@browser.refresh
 			sleep 15
+			#@browser.div(:id, "quicktabs-tab-vrm_admin_tabs-0").click
+			@browser.link(:id, "quicktabs-tab-vrm_admin_tabs-0").click
+			sleep 10
+			@browser.link(:id, "quicktabs-tab-vrm_admin_tabs_list-0").click
+			sleep 2
 			puts "Navigated to list site for edit"
-			@browser.div(:id, "view-id-VRM_all_feedback_list-page_7").link(:text,"Edit").click
+			#@browser.div(:id, "view-id-VRM_all_feedback_list-page_7").link(:text,"Edit").click
+			@browser.link(:xpath, "//*[@id='quicktabs_tabpage_vrm_admin_tabs_list_0']/div/div[2]/table/tbody/tr[1]/td[10]/a[1]").click
 			sleep 15
 			puts "Navigated to edit status"
 			@browser.select_list(:id, "edit-field-category-value").select("#{$edit_category}")
@@ -134,7 +158,7 @@ describe "Manage Categories Workflow in the VRM site" do
 			puts "Edited Category displayed in the workflow"
 			@browser.select_list(:id, "edit-field-assigned-to-uid-uid").select("#{$assignee}")
 			@browser.button(:value, "Submit").click
-			sleep 5
+			sleep 10
 			@browser.text.should include("Feedback details has been updated.")
 			@browser.link(:text, "Edit").click
 			sleep 10
@@ -155,22 +179,29 @@ describe "Manage Categories Workflow in the VRM site" do
 			@browser.link(:text, "Manage Categories").click
 			sleep 10
 			@browser.text.should include("Category List")
-			@browser.div(:id, "view-id-vrm_category_view-page_1").link(:text,"edit").click   # :href=> /admin\/content\/taxonomy\/edit\/term/).click
+			#@browser.div(:id, "view-id-vrm_category_view-page_1").link(:text,"edit").click   # :href=> /admin\/content\/taxonomy\/edit\/term/).click
+			#@browser.link(:text, "edit").click
+			@browser.link(:xpath, "//*[@id='quicktabs_tabpage_vrm_manage_categories_0']/div/div[2]/table/tbody/tr[2]/td[2]/a").click
+			sleep 5
 			@browser.text.should include("Edit Category")
 			@browser.button(:id, "edit-delete").click
-			sleep 3
+			sleep 10
 			@browser.text.should include("Unable to delete, category selected is associated with a feedback.")
 			puts "Unable to delete category"
 			@browser.goto("#{$Site_URL}vrm_dashboard")
-			@browser.div(:id, "view-id-VRM_all_feedback_list-page_7").link(:text,"Edit").click 
+			sleep 15
+			#@browser.div(:id, "view-id-VRM_all_feedback_list-page_7").link(:text,"Edit").click
+			@browser.link(:xpath, "//*[@id='quicktabs_tabpage_vrm_admin_tabs_list_1']/div/div[2]/table/tbody/tr[1]/td[10]/a[1]").click
+			sleep 10
 			@browser.select_list(:id, "edit-field-category-value").clear
 			@browser.select_list(:id, "edit-field-category-value").select("Tools")
 			@browser.button(:id, "edit-submit").click
+			sleep 10
 			@browser.text.should include("Feedback details has been updated.")
 			puts "Feedback details updated"
 			sleep 5
 		end
-		
+			
 		it "To delete a newly added category" do
 			@browser.goto("#{$Site_URL}vrm_dashboard")
 			sleep 10
@@ -188,16 +219,22 @@ describe "Manage Categories Workflow in the VRM site" do
 			#@browser.text.should include("Category Saved")
 			#sleep 15
 			#puts "category added"
-			@browser.div(:id, "view-id-vrm_category_view-page_1").link(:text,"edit").click   
+			#@browser.div(:id, "view-id-vrm_category_view-page_1").link(:text,"edit").click   
+			#@browser.link(:text, "edit").click
+			@browser.link(:xpath, "//*[@id='quicktabs_tabpage_vrm_manage_categories_0']/div/div[2]/table/tbody/tr[2]/td[2]/a").click
+			sleep 5
 			@browser.text.should include("Edit Category")
 			@browser.button(:id, "edit-delete").click
+			sleep 5
 			@browser.text.should include("Deleting a term will delete all its children if there are any. This action cannot be undone.")
 			@browser.button(:id, "edit-submit").click
-			@browser.text.should include("Deleted term #{$edit_category}")
+			sleep 25
+			#@browser.text.should include("Deleted term #{$edit_category}")
+			@browser.text.should include("#{$edit_category} successfully deleted")
 		         puts "Category Deleted"
 			sleep 10
 		end
-	
+
 	after(:all) do
 		
 		@browser.close

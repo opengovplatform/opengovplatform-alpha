@@ -1747,7 +1747,7 @@ function daily_visitor_statistics() {
 
   $till_year = (int) date("Y", $tilldate->min_date);
   $till_month = (int) date("m", $tilldate->min_date);
-
+if ($month >= $till_month) {
   $output .= "<form class=\"charts_form hidden-on-pdf\" action=\"\">";
   $output .= '<div class="metrics-datasetreport-select"><label for="selectmonth">Select Month</label>: ';
   $output .= "<select name='month_year' id='selectmonth' >";
@@ -1779,7 +1779,7 @@ function daily_visitor_statistics() {
   $output .= "</select>";
   $output .= '<input type="submit" value="Submit" id="submit_btn" title="Submit"/></div>';
   $output .= "</form>";
-
+}
   $output .= get_download_links();
 
   global $base_url;
@@ -3783,4 +3783,12 @@ function poc_status_metrics() {
     $output .= '</div>';
   }
   return $output;
+}
+
+function _generate_select_dropdown(array $options, $selected = NULL, array $attributes = array()) {
+$html = null;
+foreach ($options as $optionValue => $optionName) {
+  $selected = $optionValue == $selected ? "selected" : NULL;
+  $html .= "<option value='$optionValue'>$optionName</option>";
+}
 }

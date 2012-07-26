@@ -73,7 +73,7 @@ function cms_notify_email_mail_alter($message)
 	}
 }
 
-function cms_notify_email_pet_substitutions_alter(&$substitutions, &$params)
+function cms_notify_email_pet_substitutions_alter(&$substitutions, $params)
 {	
 	// Replace the tokens in mails.
 	$replace = array('expiry-date');

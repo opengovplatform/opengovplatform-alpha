@@ -1,25 +1,12 @@
 <?php
 	global $base_url;
-	if($base_url == "http://demodatacms.nic.in" || $base_url == "https://demodatacms.nic.in") { drupal_goto("user"); }
 	    global $theme_key;
     $themes = list_themes();
     $theme_object = $themes[$theme_key];
-    $site_var = variable_get('site_country','');
-    $node = node_load($site_var);
-	$theme_name=$theme_object->name;
-    $flag_img=substr($node->field_website_header_image[0]['filepath'],strpos($node->field_website_header_image[0]['filepath'],"files/"));
- 
-    if(variable_get('file_downloads','') == 2) {		
-		$site_img = $base_url."/system/".$flag_img;
-	} else {
-		$site_img = $base_url.'/'.$node->field_website_header_image[0]['filepath'];
-	}
+    $theme_name=$theme_object->name;
+?>
 
-
-    $portal_url = $node->field_country_portal_url[0]['url'];
-    $gov_name = $node->field_union_govt_name[0]['value'];
-
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language ?>" xml:lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=8" >
@@ -40,10 +27,11 @@
 	<!--top panel start here -->
 	<div id="topPanel">
 		<div class="mid">
-			<!--goi -->
-            <div class="goi"><div class="gov"><a target="_blank" class="country-flag" title="<?php echo $gov_name; ?>" href="<?php echo $portal_url; ?>"><img style="float: left; width: auto; padding-right:7px;" src="<?php echo $site_img; ?>" alt="Country Flag" width="auto" height="20" /><?php echo $gov_name; ?></a></div><span class="ext"></span>&nbsp;</div>
-
-			<!--goi -->
+		<!--goi-->
+			 <div style="float: left; width: auto;">
+              <?php print $header_flag; ?>
+			  </div>
+            <!--goi -->
 				
 			<!--accessibility panel start here -->
 			<div class="accessPan">
@@ -61,8 +49,8 @@
 						
 					<!--color contrast options -->
 					<li class="contrast">
-						<a href="javascript:void(0);" class="dark" onclick="chooseStyle('change', 60);"><img src="<?php echo $base_url."/".path_to_theme();?>/images/texthighContrast.gif" alt="High Contrast View"/></a>
-						<a href="javascript:void(0);" class="light" onclick="chooseStyle('none', 60);"><img src="<?php echo $base_url."/".path_to_theme();?>/images/textNormal.gif" alt="Standard Contrast View"/></a>
+						<a href="javascript:void(0);" class="dark" onclick="chooseStyle('change', 60,'none');"><img src="<?php echo $base_url."/".path_to_theme();?>/images/texthighContrast.gif" alt="High Contrast View"/></a>
+						<a href="javascript:void(0);" class="light" onclick="chooseStyle('none', 60,'none');"><img src="<?php echo $base_url."/".path_to_theme();?>/images/textNormal.gif" alt="Standard Contrast View"/></a>
 					</li>
 					<!--color contrast options -->
 					<li class="feedback"><a href="<?php echo $base_url;?>/feedback" title="Feedback">Feedback</a></li>

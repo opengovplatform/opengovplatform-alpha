@@ -5,11 +5,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Test_08_CMS_Country_data_workflow_input.rb'
 require 'InputRepository/Config.rb'
 require 'lib/NIC_Lib.rb'
@@ -31,7 +31,7 @@ describe "CMS Country data workflow (Creation/Approval/Publishing)" do
   it "Validation check for Title of the Country data" do
         
         @browser1.goto("#{$Site_URL}/node/add/country-data")
-        @browser1.text_field(:id, "edit-field-instructions-0-value").set($instruction)
+       	@browser1.text_field(:id, "edit-field-instructions-0-value").set($instruction)
         $img_path = $img_path.gsub("/", "\\")
         puts $img_path
         @browser1.file_field(:id, "edit-field-website-header-image-0-upload").set($img_path)
@@ -48,6 +48,8 @@ describe "CMS Country data workflow (Creation/Approval/Publishing)" do
         sleep 8
         @browser1.text_field(:id, "edit-field-union-govt-name-0-value").set($country)
         @browser1.text_field(:id, "edit-field-country-dataset-link-0-url").set($link1)
+		@browser1.text_field(:id, "edit-field-country-latitude-0-value").set($lat)
+		@browser1.text_field(:id, "edit-field-country-longitude-0-value").set($lon)
         #@browser1.text_field(:id, "edit-field-country-dataset-link-1-url").set($link2)
         @browser1.select_list(:id, "edit-field-content-creator-uid-uid").select($CMS_content_creater_email)
         @browser1.select_list(:id, "edit-field-moderator-uid-uid").select($CMS_moderator_email)
@@ -70,13 +72,14 @@ describe "CMS Country data workflow (Creation/Approval/Publishing)" do
       puts $country_title
       @browser1.text_field(:id, "edit-title").set($country_title)
       @browser1.browser.button(:value,"Preview").click
+      sleep 8
       @browser1.text.should include($country_title)
       puts "Preview completed"
    end
 
    it "Save country data" do
       @browser1.button(:value,"Submit").click
-      sleep 2
+      sleep 6
       @browser1.text.should include("Country Data #{$country_title} has been created")
       puts "Save completed"
    end
@@ -361,6 +364,8 @@ describe "CMS Country data workflow (Creation/Approval/Publishing)" do
       @browser.close
       puts "Verify country data on frontend completed"
   end
+
+
 =begin
   it "Delete country data" do
       @browser4.refresh

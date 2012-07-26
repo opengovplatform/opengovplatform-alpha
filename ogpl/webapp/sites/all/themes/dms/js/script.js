@@ -10,6 +10,9 @@ setTimeout( function(){
     $('.defaultSkin #edit-body_ifr').css('height','155px');
  }, 3000);
  
+if($(".view-display-id-page_19 table th:first").length >0){$(".view-display-id-page_19 table th:first").html("<input id='bulk_print_select_all' type='checkbox' onclick='bulk_print_select_all();' />  "); }
+ 
+ 
 /*if($('#block-quicktabs-vrm_pmo_tabs_list').length > 0){
     $("#block-quicktabs-vrm_pmo_tabs_list .view-filters").each(function(index) {
         var html_text = $(this).html();
@@ -328,6 +331,14 @@ $('#node-form').ajaxComplete(state_data_site_eventbind);
       this.title = this.text;
     })
 	show_para_hostip_para($("#edit-host-ip-config").val());
+
+    $(".messages.error ul li").each(function(){
+        if($(this).find('ul').size() > 0){
+            var cont = $(this).find('ul li').html();
+            $(this).find('ul').remove();
+            $(this).append(cont);
+        }
+    });
 });
 
 
@@ -460,27 +471,86 @@ function show_para_hostip_para(val){
 	}	
 }
 
+
 function printSelectedFeedback(sitename) {
-    var selected = $("input:checked");
+
+    var selected = $("input[id^=bulk-print]:checked");
     counter = selected.length;
     var separator = '<p style="page-break-after: always">&nbsp;</p>';
-
+    var print_button = '<button id="print" class="noprint" onclick="window.print();">Print</button>'; 
+    var print_css='<style type="text/css" media="all">@media print {.noprint {display:none;}}</style>';
     if (selected.length == 0) alert("Please select one or more feedbacks to print.");
     else{
-    $("#print-waiting").show();
+	$("#print-waiting").show();
+   $("#printable-content").contents().find("head").html('');
+   $("#printable-content").contents().find("head").append(print_css);
+
     $("#printable-content").contents().find("body").html('');
+   
+  $("#printable-content").contents().find("body").append(print_button);
     $.each(selected, function (index, element) {
         $.get(sitename + '/print/' + element.value, function (html) {
-            $("#printable-content").contents().find("body").append(html + '<br>' + separator);
-            counter--;
+             if(counter==1)
+             $("#printable-content").contents().find("body").append(html);
+             else 
+             $("#printable-content").contents().find("body").append(html + '<br>' + separator);
+
+             counter--;
 
             if (counter == 0) {
-                 $("#print-waiting").hide();
-                var objFrame = window.frames["printable-content"];
-                objFrame.focus();
-                objFrame.print();
-            }
-        });
-    });
-    }
+	       $("#printable-content").contents().find("body").append(print_button);
+		$("#print-waiting").hide();
+            $("#printable-content").contents().find(".print-feedback").remove();
+			$("#printable-content").contents().find(".print-logo").remove();
+			var new_window=window.open('','bulk_print') ;
+			new_window.document.title="Processing Bulk Print...";
+			var print_window =  window.open('','bulk_print','toolbar=0,scrollbars=yes,width=600,height=600');
+     
+			var html = $("#printable-content").contents().find("html").html();
+                     
+			print_window.document.open();
+			print_window.document.write(html);
+			print_window.document.close();
+			print_window.focus();
+	
+			//print_window.print();
+			//print_window.close();
+          }
+        } ,"html");
+      } );
+    
+}		
+}
+
+function bulk_print_select_all()
+{
+ if($("#bulk_print_select_all").is(':checked')){
+  $("[id^=bulk-print]").each(function(){   
+      $(this).attr('checked',true);
+   });
+  }
+ else
+ {
+   $("[id^=bulk-print]").each(function(){   
+      $(this).attr('checked',false);
+   });
+ }
+}
+
+function feedback_print(url)
+{      $("#printable-content").contents().find("body").html('');
+        var new_window=window.open('','feedback_print') ;
+		new_window.document.title="Feedback Details";
+	 $.get(url, function (html) { 	
+	           var printWin = window.open('','feedback_print','toolbar=0,scrollbars=yes,width=auto,height=auto');
+			   $("#printable-content").contents().find("body").append(html);
+			   $("#printable-content").contents().find(".print-feedback").remove();
+			   $("#printable-content").contents().find(".print-logo").remove();
+			   $("#printable-content").contents().find(".print-hr").remove();
+			   printWin.document.write($("#printable-content").contents().find("html").html());
+			   printWin.document.close();
+			   printWin.focus();
+			   printWin.print();
+			   printWin.close();
+             });
 }

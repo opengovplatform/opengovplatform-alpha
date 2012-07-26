@@ -1,0 +1,3 @@
+<?php
+
+include_once('vrm_components.features.inc');

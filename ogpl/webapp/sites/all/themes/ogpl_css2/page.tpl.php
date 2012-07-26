@@ -1,24 +1,12 @@
 <?php
 	global $base_url;
-	if($base_url == "http://demodatacms.nic.in" || $base_url == "https://demodatacms.nic.in") { drupal_goto("user"); }
 	  global $theme_key;
     $themes = list_themes();
     $theme_object = $themes[$theme_key];
-    $site_var = variable_get('site_country','');
-    $site_node = node_load($site_var);
-	$theme_name=$theme_object->name;
+    $theme_name=$theme_object->name;
 	$access_denied = 0;	
 	$admin_page_urls = variable_get('admin_pages_list', '');
-    $flag_img=substr($site_node->field_website_header_image[0]['filepath'],strpos($site_node->field_website_header_image[0]['filepath'],"files/"));
- 
-    if(variable_get('file_downloads','') == 2) {		
-		$site_img = $base_url."/system/".$flag_img;
-	} else {
-		$site_img = $base_url.'/'.$site_node->field_website_header_image[0]['filepath'];
-	}
 
-    $portal_url = $site_node->field_country_portal_url[0]['url'];
-    $gov_name = $site_node->field_union_govt_name[0]['value'];
     if(in_array(drupal_get_path_alias($_GET['q']), explode("\r\n", $admin_page_urls)) && in_array('anonymous user', $user->roles)){
 		$access_denied = 1;
 		$head_title = "Access Denied";
@@ -51,9 +39,11 @@
 	<!--top panel start here -->
 	<div id="topPanel">
 		<div class="mid">
-			<!--goi -->
-            <div class="goi"><div class="gov"><a target="_blank" class="country-flag" title="<?php echo $gov_name; ?>" href="<?php echo $portal_url; ?>"><img style="float: left; width: auto; padding-right:7px;" src="<?php echo $site_img; ?>" alt="Country Flag" width="auto" height="20" /><?php echo $gov_name; ?></a></div><span class="ext"></span>&nbsp;</div>
-			<!--goi -->
+			<!--goi-->
+			 <div style="float: left; width: auto;">
+              <?php print $header_flag; ?>
+			  </div>
+            <!--goi -->
 				
 			<!--accessibility panel start here -->
 			<div class="accessPan">

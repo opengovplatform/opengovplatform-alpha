@@ -1,0 +1,8 @@
+<?php
+
+
+function cms_themes_file_uploader_install() {
+  // Weight set higher to dms_customization module so that the cache control is set to public for 
+  // css files.
+  db_query("UPDATE {system} SET weight=1 WHERE name='cms_themes_file_uploader'");
+}

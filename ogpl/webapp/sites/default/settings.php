@@ -88,7 +88,7 @@
  *   $db_url = 'mysqli://username:password@localhost/databasename';
  *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysql://ogpl_live:ogpl_live@localhost/ogpl_live';
+$db_url = 'mysql://ogpl:ogpl@localhost/ogpl';
 $db_prefix = '';
 
 /**
@@ -255,5 +255,7 @@ ini_set('url_rewriter.tags',        '');
 $conf['locale_custom_strings_en'] = array(
     'Updated term %term.' => '%term successfully edited.',
     'Deleted term %name.' => '%name successfully deleted.',
-    'The answer you entered for the CAPTCHA was not correct.' => '<ul><li><label>The answer you entered for the Verification field was not correct.</label></li></ul>'
+    'The answer you entered for the CAPTCHA was not correct.' => '<ul><li><label>The answer you entered for the Verification field was not correct.</label></li></ul>',
+    'Invalid character in @key'=>'<ul><li><label>Invalid character in @key</label></li></ul>',
+	'Each email address will be obfuscated in a human readable fashion or (if JavaScript is enabled) replaced with a spamproof clickable link.'=>''
 );

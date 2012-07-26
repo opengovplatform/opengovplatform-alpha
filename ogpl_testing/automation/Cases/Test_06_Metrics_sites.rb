@@ -3,11 +3,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Test_06_Metrics_sites_input.rb'
 require 'InputRepository/Config.rb'
 
@@ -74,18 +74,16 @@ it "Successful Navigation To High Value Dataset" do
 	@browser.text.should include('High Value Services')
 	
 	@browser.select_list(:id, "selectyear").select("#{$current_year}")
-	@browser.select_list(:id, "agency").select(/Forests and Mining/)
-	
-	@browser.select_list(:id, "cat").select(/Births, Deaths, Marriages, and Divorces/)
+	@browser.select_list(:id, "agency").select(/General Services Department /)
+	@browser.select_list(:id, "cat").select(/Geography and Environment /)
 	
 	@browser.button(:value,"Submit").click
 	@browser.text.should include('High Value Raw Datasets')
 	
 	
 	@browser.select_list(:id, "selectyear").select("#{$year}")
-	@browser.select_list(:id, "agency").select(/Commerce Department/)
-	
-	@browser.select_list(:id, "cat").select(/Health and Nutrition/)
+	@browser.select_list(:id, "agency").select(/Commerce Department /)
+	@browser.select_list(:id, "cat").select(/Health and Nutrition /)
 	
 	@browser.button(:value,"Submit").click
 	@browser.text.should include('High Value Documents')
@@ -99,7 +97,8 @@ it "Successful Navigation To Suggested Datasets" do
 	@browser.text.should include('Agency Determination on Suggestions')
 	
 	@browser.goto("#{$Site_URL}suggested-datasets-list")
-	@browser.text.should include('Valuable Suggestions/Ideas')
+  sleep 3
+	#@browser.body.should include('')
 	
 	puts "NAVIGATION TO SUGGESTED DATASETS COMPLETED"
 	

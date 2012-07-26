@@ -1,4 +1,6 @@
+; $Id$
 name = Web Charts export
 description = A module to generate the different charts using Fusion Charts library. Export the chart as CSV, XLS and PDF. Cron script for executing the IP2Location web service or script.
 core = 6.x
-
+package = OGPL
+dependencies[] = dms_ds_upload

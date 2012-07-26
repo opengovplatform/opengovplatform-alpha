@@ -14,13 +14,16 @@ myfile.close
 
 myfile = File.open("test.bat","w")
 myfile.puts("cd /d "+ $path_finder)
-myfile.puts("rspec --format h -o Report.html "+$cases)
+myfile.puts("ruby filenamegen.rb")
+myfile.puts("set /p report_file=<report_file_name.txt")
+myfile.puts("rspec --format h -o %report_file% "+$cases)
 myfile.close
 
 myfile = File.open("testrun.bat","w")
 myfile.puts("@REM OFF") 
 myfile.puts("cd /d "+ $path_finder)
-myfile.puts("rspec --format h -o Report.html --tag ~datacreation --tag ~temp --tag ~inprogress "+$cases)
+myfile.puts("test.bat")
+
 myfile.close
 
 

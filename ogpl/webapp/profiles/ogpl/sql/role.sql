@@ -1,1 +1,0 @@
-INSERT IGNORE INTO `role` VALUES (10,'Administrator'),(1,'anonymous user'),(2,'authenticated user'),(18,'CMS Administrator'),(11,'Content Creator'),(3,'Data Steward'),(9,'Manager'),(12,'Moderator'),(4,'Organization POC'),(6,'PMO'),(13,'Publisher'),(15,'VRM Admin');

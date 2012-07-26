@@ -5,11 +5,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Test_10_CMS_Featured_gallery_workflow_input.rb'
 require 'InputRepository/Config.rb'
 require 'lib/NIC_Lib.rb'
@@ -43,12 +43,13 @@ describe "CMS Featured Gallery workflow (Creation/Approval/Publishing)" do
         @browser1.text_field(:id,"edit-field-expiry-date-0-value-datepicker-popup-0").set($date)
         @browser1.browser.text_field(:id, "edit-field-no-ofdays-0-value").set($days)
         sleep 2
-        @browser1.button(:value,"Save").click
+        @browser1.button(:value,"Submit").click
         sleep 2
         @browser1.text.should include('Title field is required')
         puts "Validation completed"
 
    end
+
 
    it "Check preview" do
 
@@ -60,13 +61,14 @@ describe "CMS Featured Gallery workflow (Creation/Approval/Publishing)" do
       puts $feat_gal_title
       @browser1.text_field(:id, "edit-title").set($feat_gal_title)
       @browser1.browser.button(:value,"Preview").click
-      @browser1.text.should include("Preview")
+      sleep 2
+      #@browser1.text.should include("Preview")
       @browser1.text.should include($feat_gal_title)
       puts "Preview completed"
    end
 
    it "Save Featured Gallery" do
-      @browser1.button(:value,"Save").click
+      @browser1.button(:value,"Submit").click
       sleep 2
       @browser1.text.should include("Featured Gallery #{$feat_gal_title} has been created")
       puts "Save completed"
@@ -87,13 +89,14 @@ describe "CMS Featured Gallery workflow (Creation/Approval/Publishing)" do
       puts $node_val
 
       @browser1.text_field(:id, "edit-field-instructions-0-value").set($revised_inst)
-      @browser1.button(:value,"Save").click
+      @browser1.button(:value,"Submit").click
       sleep 2
       @browser1.text.should include("#{$revised_inst}")
       @browser1.text.should include("Featured Gallery #{$feat_gal_title} has been updated")
       puts "Edit completed"
 
    end
+
 
    it "Send to moderator for approval" do
       @browser5.link(:text, "Home").click
@@ -361,6 +364,8 @@ describe "CMS Featured Gallery workflow (Creation/Approval/Publishing)" do
       @browser.close
       puts "Verify Featured gallery on frontend completed"
   end
+
+
 =begin
   it "Delete Featured Gallery" do
       @browser4.refresh

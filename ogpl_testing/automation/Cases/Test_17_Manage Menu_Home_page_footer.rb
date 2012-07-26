@@ -5,11 +5,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Test_17_Manage Menu_Home_page_footer_input.rb'
 require 'InputRepository/Config.rb'
 require 'lib/NIC_Lib.rb'
@@ -60,6 +60,7 @@ end
       driver = Selenium::WebDriver.for :firefox, :profile => "Selenium"
       @browser = Watir::Browser.new driver
       @browser.goto("#{$Site_URL}")
+      sleep 5
       @browser.html.should include("About Us")
       @browser.close
       puts "Checked on front end site"
@@ -71,6 +72,7 @@ end
       @browser1.text_field(:id, "edit-menu-link-path").set("#{$url}")
       @browser1.text_field(:id, "edit-menu-link-title").set("#{$title}")
       @browser1.button(:value,"Save").click
+      sleep 5
 
 end
 
@@ -78,6 +80,7 @@ end
       driver = Selenium::WebDriver.for :firefox, :profile => "Selenium"
       @browser = Watir::Browser.new driver
       @browser.goto("#{$Site_URL}")
+      sleep 5
       @browser.html.should include("#{$title}")
       @browser.close
       puts "Checked on front end site"
@@ -87,14 +90,17 @@ end
       driver = Selenium::WebDriver.for :firefox, :profile => "Selenium"
       @browser = Watir::Browser.new driver
       @browser.goto("#{$Site_URL}")
+      sleep 5
       @browser.link(:text,"#{$title}").click
+      sleep 5
      #@browser.window(:url => "#{$url}").use do
-      @browser.html.should include("#{$title}")
+      #@browser.html.should include("#{$title}")
       @browser.close
       puts "Checked on front end site"
       #end
   end
-  
+ 
+=begin 
     it "Verify deletion of newly added footer link in CMS " do
         
         @browser1.goto("#{$Site_URL}/admin/build/menu-customize/menu-footerlinks")
@@ -104,7 +110,7 @@ end
 
         #@browser1.button(:value,"Confirm").click
 	end
-
+=end
 
   after(:all) do
         @browser1.link(:text,"Log Out").click

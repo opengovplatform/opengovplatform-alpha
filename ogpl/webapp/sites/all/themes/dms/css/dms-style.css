@@ -2281,3 +2281,11 @@ width:850px;
 .view-id-Theme_Files_Dashboard table{
 	margin-top:15px;
 }
+.rate-widget-thumbs_up_down ul li a
+{
+  text-indent:10000px !important;
+}
+
+#node-form .captcha #edit-captcha-response{
+width:215px;
+}

@@ -1,0 +1,39 @@
+<?php
+
+function web_header_flag_block($op = 'list', $delta = 0, $edit = array()) {
+  $blocks = array();
+  switch ($op) {
+    case 'list':
+      $blocks[0] = array(
+        'info' => t('Header Flag Block'),
+      );
+      break;
+    case 'view':
+      switch ($delta) {
+        case 0:
+          $blocks['subject'] = "<none>";
+          $blocks['content'] = display_header_flag();
+          break;
+      }
+  }
+  return $blocks;
+}
+
+function display_header_flag() {
+  global $base_url;
+  $site_node = node_load(variable_get('site_country', ''));
+
+  return '<div class="goi">
+    <div class="gov">
+      <a target="_blank"
+          class="country-flag"
+          title="' . $site_node->field_union_govt_name[0]['value'] . '"
+          href="' . $site_node->field_country_portal_url[0]['url'] . '">
+            <img style="float: left; width: auto; padding-right:7px;" height="20"
+                  src="' . file_create_url($site_node->field_website_header_image[0]['filepath']) . '"
+                  alt="Country Flag" />' . $site_node->field_union_govt_name[0]['value'] . '
+      </a>
+    </div>
+    <span class="ext"></span>&nbsp;
+</div>';
+}

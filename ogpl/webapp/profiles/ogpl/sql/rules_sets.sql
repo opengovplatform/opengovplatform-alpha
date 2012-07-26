@@ -1,1 +1,0 @@
-INSERT IGNORE INTO `rules_sets` VALUES ('rules_set_1','a:4:{s:5:\"label\";s:44:\"Example: Empty rule set working with content\";s:9:\"arguments\";a:1:{s:4:\"node\";a:2:{s:4:\"type\";s:4:\"node\";s:5:\"label\";s:7:\"Content\";}}s:10:\"categories\";a:1:{i:0;s:7:\"example\";}s:6:\"status\";s:6:\"custom\";}');

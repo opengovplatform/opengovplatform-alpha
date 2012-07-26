@@ -518,7 +518,7 @@ else
 		<script type="text/javascript">
 			$("#block-apachesolr-sort .item-list li:first").hide();
 		</script>
-		<?
+		<?php
 	}
   ?>
 

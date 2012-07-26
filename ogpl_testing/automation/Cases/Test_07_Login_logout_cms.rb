@@ -3,11 +3,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Config.rb'
 
 
@@ -25,11 +25,10 @@ describe "Verify Login/Logout to CMS site" do
 	  
 	  @browser.text_field(:id,"edit-name").set("#{$CMS_Admin_User_Email}")
     @browser.text_field(:id,"edit-pass").set("#{$CMS_Admin_User_Passwd}")
+	sleep 2
 	  @browser.button(:id,"edit-submit").click
-    sleep 5
+    sleep 20
 	  	  
-    @browser.text.should include('Welcome to Open Government Platform (OGPL)')
-    
     @browser.link(:text,"Log Out").click
     sleep 10
     
@@ -43,8 +42,9 @@ describe "Verify Login/Logout to CMS site" do
     sleep 3
 	  @browser.text_field(:id,"edit-name").set("#{$CMS_Admin_User_Email}")
     @browser.text_field(:id,"edit-pass").set("Priya_admin123")
-	  @browser.button(:id,"edit-submit").click
-    sleep 8
+	sleep 2
+	@browser.button(:id,"edit-submit").click
+    sleep 20
 	  	  
     @browser.text.should include('Sorry, unrecognized username or password')
    
@@ -56,8 +56,9 @@ describe "Verify Login/Logout to CMS site" do
 	  @browser.goto("#{$CMS_Site_URL}")
 	  @browser.text_field(:id,"edit-name").set("")
     @browser.text_field(:id,"edit-pass").set("")
-	  @browser.button(:id,"edit-submit").click
-    sleep 2
+	sleep 2
+@browser.button(:id,"edit-submit").click
+    sleep 20
 	  	  
     @browser.text.should include('E-mail field is required.')
     @browser.text.should include('Password field is required.')
@@ -71,8 +72,9 @@ describe "Verify Login/Logout to CMS site" do
 	  @browser.goto("#{$CMS_Site_URL}")
 	  @browser.text_field(:id,"edit-name").set("#{$CMS_Admin_User_Email}")
     @browser.text_field(:id,"edit-pass").set("")
-	  @browser.button(:id,"edit-submit").click
-    sleep 2
+	sleep 2
+@browser.button(:id,"edit-submit").click
+    sleep 20
 	  	  
 
     @browser.text.should include('Password field is required.')

@@ -8,7 +8,9 @@ $link2 = 'http://www.google.com'
 $date = '12 Feb 2013'
 $days = '30'
 $wd = Dir.pwd
-$img_path = $wd + "/InputRepository/GER.png"
+$img_path = $wd + "/InputRepository/GER.jpg"
+$lat = '35'
+$lon = '45'
 
 #COMMENTS
 

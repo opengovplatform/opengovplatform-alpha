@@ -3,11 +3,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Config.rb'
 #include 'Suite'
 #PRE REQUISITES :-
@@ -39,8 +39,14 @@ describe "Download Metrics files" do
       $contains = Dir.new($fl_nm).entries
       #sleep 3
       #p $contains
-      $contains[3].should include("agency_wise_report")
-      $contains[3].should include(".csv")
+      if ($contains[2] == ".svn")
+			$contains[3].should include("agency_wise_report")
+			$contains[3].should include(".csv")
+	  else
+			$contains[2].should include("agency_wise_report")
+			$contains[2].should include(".csv")
+	  end
+	  
       
   end
 
@@ -62,8 +68,14 @@ describe "Download Metrics files" do
       $contains = Dir.new($fl_nm).entries
       #sleep 3
       #p $contains
-      $contains[4].should include("agency_wise_report")
-      $contains[4].should include(".xls")
+	  if ($contains[2] == ".svn")
+			$contains[4].should include("agency_wise_report")
+			$contains[4].should include(".xls")
+	  else
+			$contains[3].should include("agency_wise_report")
+			$contains[3].should include(".xls")
+	  end
+      
   end
 
   it "To download PDF file" do
@@ -83,9 +95,14 @@ describe "Download Metrics files" do
       puts $fl_nm
       $contains = Dir.new($fl_nm).entries
       p $contains
-      $contains[3].should include("agency-publications")
-      $contains[3].should include(".pdf")
-      
+      if ($contains[2] == ".svn")
+			$contains[3].should include("agency-publications_agency-wise")
+			$contains[3].should include(".pdf")
+	  else
+			$contains[2].should include("agency-publications_agency-wise")
+			$contains[2].should include(".pdf")
+	  end
+	  
   end
 
   after(:all) do

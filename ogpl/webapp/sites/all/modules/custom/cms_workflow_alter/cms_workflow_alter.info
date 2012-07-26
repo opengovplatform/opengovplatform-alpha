@@ -1,3 +1,5 @@
+; $Id$
 name=Cms Workflow Alter
 description=Module for altering the display of contents in views in content management system
 core=6.x
+package = OGPL

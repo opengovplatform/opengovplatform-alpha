@@ -3,11 +3,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'lib/NIC_Lib.rb'
 #require 'InputRepository/captcha.rb'
 require 'InputRepository/Config.rb'
@@ -47,8 +47,8 @@ describe "To log in to the OGPL site and Submit the Feedback Form" do
 	
 		@browser.text_field(:name, "field_email[0][email]").set("#{$invalid_email}")
 		@browser.button(:value, "Submit").click
-		@browser.text.should include("Please enter a valid email id in Your E-mail Address field eg. sam@xyz.com")
 		sleep 5
+		@browser.text.should include("Please enter a valid email id in Your E-mail Address field eg. sam@xyz.com")
 	end
 	
 	it "To Submit feedback form with Valid details" do
@@ -61,6 +61,7 @@ describe "To log in to the OGPL site and Submit the Feedback Form" do
 		@browser.text_field(:name, "field_email[0][email]").set("#{$your_email_address}")
 		@browser.text_field(:name, "field_feedback_body[0][value]").set("#{$feedback}")
 		@browser.button(:value, "Submit").click
+		sleep 8
 		@browser.text.should include("Feedback - Acknowledgment")
 		@browser.text.should include("Thank you for spending your valuable time in giving the feedback.")
 		sleep 5

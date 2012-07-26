@@ -323,8 +323,8 @@ return format_date($data->workflow_node_stamp, \'custom\',variable_get(\'date_fo
     'type' => 'none',
   ));
   $handler->override_option('title', 'Latest Pages In Last 7 Days');
-  $handler->override_option('empty', 'No pages were uploaded in last 7 days.');
-  $handler->override_option('empty_format', '1');
+  $handler->override_option('empty', '<p>No pages were uploaded in last 7 days.</p>');
+  $handler->override_option('empty_format', '2');
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(

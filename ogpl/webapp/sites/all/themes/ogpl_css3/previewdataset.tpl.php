@@ -19,8 +19,6 @@ $title = ($data['mode']!='print') ? "Embed" : "Print";
 <?php
 	echo "<h1>".$data['headline']."</h1>";
 	echo "<div class=\"page-title-border\"></div>";
-	?>
-	<?
 	echo "<div class=\"dataset\">";
 	echo $data['body'];
 	echo "</div>";
@@ -28,13 +26,14 @@ $title = ($data['mode']!='print') ? "Embed" : "Print";
 	if($data['mode']!='print'){
 	?>
 	<div class="embed-feature-links">
-		<div class="fLeft"><a href="<?php echo $base_path.$data['path']."#tabs-block";?>" target="_blank" class="embeded-link discuss">Contact Dataset Owner</a></div>
+	<div class="fLeft"><a href="<?php echo $base_path.$data['path']."#tabs-block";?>" target="_blank" class="embeded-link discuss">Discuss</a></div>
+		<div class="fLeft"><a href="<?php echo $base_path.$data['path']."?showcontact#tabs-block";?>" target="_blank" class="embeded-link discuss">Contact Dataset Owner</a></div>
 		<div class="fLeft"><a href="<?php echo $base_path.$data['path']."?showrating#tabs-block";?>" target="_blank" class="embeded-link rating">Rating</a></div>
 		<div class="fLeft"><a href="<?php echo $base_path."suggest_dataset/";?>" target="_blank" class="embeded-link suggest-dataset-link">Suggest Dataset</a></div>
 		<div class="fLeft"><a href="<?php echo $base_path."print-dataset/".$data['path'];?>" target="_blank">Print</a></div>
 		<div class="cBoth"></div>
 	</div>
-	<?}?>
+	<?php }?>
 </div>
 </body>
 </html>

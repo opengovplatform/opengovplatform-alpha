@@ -1,0 +1,3 @@
+name = Role Selector
+description = Allows the authenticated user to select role after login.
+core = 6.x

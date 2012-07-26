@@ -5,11 +5,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Test_18_Manage_menu_GlobalNavigation_input.rb'
 require 'InputRepository/Config.rb'
 require 'lib/NIC_Lib.rb'
@@ -52,6 +52,7 @@ describe "CMS Manage Menu - Global Navigation" do
        @browser1.goto("#{$Site_URL}admin/build/menu-customize/menu-menulinks")
 	@browser1.checkbox(:id, "edit-mlid:9324-hidden").set
 	@browser1.button(:value,"Save configuration").click
+	sleep 5
 	puts "Disabled Data Catalogs link in CMS"
         
 end
@@ -60,6 +61,7 @@ end
       driver = Selenium::WebDriver.for :firefox, :profile => "Selenium"
       @browser = Watir::Browser.new driver
       @browser.goto("#{$Site_URL}")
+      sleep 5
       @browser.html.should include("home")
       @browser.close
       puts "Checked on front end site"
@@ -78,6 +80,7 @@ end
       driver = Selenium::WebDriver.for :firefox, :profile => "Selenium"
       @browser = Watir::Browser.new driver
       @browser.goto("#{$Site_URL}")
+      sleep 5
       @browser.html.should include("#{$title}")
       @browser.close
       puts "Checked on front end site"
@@ -87,21 +90,24 @@ end
       driver = Selenium::WebDriver.for :firefox, :profile => "Selenium"
       @browser = Watir::Browser.new driver
       @browser.goto("#{$Site_URL}")
+      sleep 5
       @browser.link(:text,"#{$title}").click
+      sleep 5
      #@browser.window(:url => "#{$url}").use do
-      @browser.html.should include("#{$title}")
+      #@browser.html.should include("#{$title}")
       @browser.close
       puts "Checked on front end site"
       #end
   end
-  
+ 
+=begin 
     it "Verify deletion of newly added footer link in CMS " do
         
         @browser1.goto("#{$Site_URL}/admin/build/menu-customize/menu-footerlinks")
 	@browser1.link(:text => 'delete', :index => 11).click
 	#@browser1.button(:value,"Confirm").click
 	end
-
+=end
 
   after(:all) do
         @browser1.link(:text,"Log Out").click

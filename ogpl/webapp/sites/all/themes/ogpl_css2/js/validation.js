@@ -62,6 +62,46 @@ $(document).ready(function(){
 				"emailid": {
 					email: "Please enter a valid email id in Your E-mail Address field eg. sam@xyz.com",
 					required: "Your E-mail Address field is required."
+				}
+			},
+			invalidHandler: function(form, validator) {
+				if (validator.errorList.length > 0) {
+				var x = $(validator.errorList[0].element).offset().top - $(validator.errorList[0].element).height() - 200;
+					$('html, body').animate({scrollTop: x}, 1000);
+					$('.wysiwyg-toggle-wrapper a').each(function() {
+						$(this).click();
+						$(this).click();
+					});
+				}
+			}
+		}
+	);
+	
+	var container3 = $('div.commentsError.messages.error');
+	$("#comment-form").validate(
+		{
+			errorContainer: container3,
+			errorLabelContainer: $("ul", container3),
+			wrapper: 'li',
+			meta: "validate",
+
+			rules: {
+				"name":"required",
+				"comment":"required",
+				"mail":{required:true,email: true},
+				"captcha_response":"required",
+
+			},
+			messages: {
+				"name": {
+					required: "Your Name field is required."
+				},
+				"comment": {
+					required: "Comment field is required."
+				},
+				"mail": {
+					email: "Please enter a valid email id in E-mail field eg. sam@xyz.com",
+					required: "E-mail field is required."
 				},
 				"captcha_response":{
 					required: "Verification field is required."	
@@ -79,6 +119,4 @@ $(document).ready(function(){
 			}
 		}
 	);
-	
-	
 });

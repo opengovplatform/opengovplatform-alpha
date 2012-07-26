@@ -287,7 +287,7 @@ return $duration." days";
       ),
       'relationship' => 'none',
     ),
-    'dms_allowed_operations' => array(
+    'cms_allowed_operations' => array(
       'label' => 'Operations',
       'alter' => array(
         'alter_text' => 0,
@@ -314,12 +314,9 @@ return $duration." days";
       'empty_zero' => 0,
       'text' => '',
       'exclude' => 0,
-      'id' => 'dms_allowed_operations',
+      'id' => 'cms_allowed_operations',
       'table' => 'node',
-      'field' => 'dms_allowed_operations',
-      'override' => array(
-        'button' => 'Override',
-      ),
+      'field' => 'cms_allowed_operations',
       'relationship' => 'none',
       'preview_link_text' => 'Preview',
       'download_link_text' => '',
@@ -991,7 +988,7 @@ return $duration." days";
       ),
       'relationship' => 'none',
     ),
-    'dms_allowed_operations' => array(
+    'cms_allowed_operations' => array(
       'label' => 'Operations',
       'alter' => array(
         'alter_text' => 0,
@@ -1018,12 +1015,9 @@ return $duration." days";
       'empty_zero' => 0,
       'text' => '',
       'exclude' => 0,
-      'id' => 'dms_allowed_operations',
+      'id' => 'cms_allowed_operations',
       'table' => 'node',
-      'field' => 'dms_allowed_operations',
-      'override' => array(
-        'button' => 'Override',
-      ),
+      'field' => 'cms_allowed_operations',
       'relationship' => 'none',
       'preview_link_text' => 'Preview',
       'download_link_text' => '',
@@ -1470,7 +1464,7 @@ return $duration." days";
       ),
       'relationship' => 'none',
     ),
-    'dms_allowed_operations' => array(
+    'cms_allowed_operations' => array(
       'label' => 'Operations',
       'alter' => array(
         'alter_text' => 0,
@@ -1497,12 +1491,9 @@ return $duration." days";
       'empty_zero' => 0,
       'text' => '',
       'exclude' => 0,
-      'id' => 'dms_allowed_operations',
+      'id' => 'cms_allowed_operations',
       'table' => 'node',
-      'field' => 'dms_allowed_operations',
-      'override' => array(
-        'button' => 'Override',
-      ),
+      'field' => 'cms_allowed_operations',
       'relationship' => 'none',
       'preview_link_text' => 'Preview',
       'download_link_text' => '',
@@ -2186,7 +2177,7 @@ return $duration." days";
       ),
       'relationship' => 'none',
     ),
-    'dms_allowed_operations' => array(
+    'cms_allowed_operations' => array(
       'label' => 'Operations',
       'alter' => array(
         'alter_text' => 0,
@@ -2213,12 +2204,9 @@ return $duration." days";
       'empty_zero' => 0,
       'text' => '',
       'exclude' => 0,
-      'id' => 'dms_allowed_operations',
+      'id' => 'cms_allowed_operations',
       'table' => 'node',
-      'field' => 'dms_allowed_operations',
-      'override' => array(
-        'button' => 'Override',
-      ),
+      'field' => 'cms_allowed_operations',
       'relationship' => 'none',
       'preview_link_text' => 'Preview',
       'download_link_text' => '',

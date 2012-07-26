@@ -1,0 +1,216 @@
+<?php
+function role_selector_init() {
+  global $user;
+
+  if (in_array(arg(0), array('logout', 'user', 'encrypt-submissions', 'image_captcha'))) {
+    return;
+  }
+
+  if ($_SESSION['role_selector_selected_role'] == '' && $user->uid && count(_get_user_roles($user->uid)) > 1) {
+    drupal_goto('user/select_role');
+  }
+}
+
+function role_selector_user($op, &$edit, &$account, $category = NULL) {
+	global $current_rid;
+  switch ($op) {
+    case 'logout':
+      unset($_SESSION['role_selector_selected_role']);
+      break;
+    case 'delete':
+      db_query('DELETE FROM {role_selector_users_roles} WHERE uid = %d', $account->uid);
+      break;
+    case 'insert':
+      foreach ($edit['roles'] as $rid) {
+        if (!is_int($rid) or $rid < 3) {
+          continue;
+        } // ignore anonymous and authenticated roles
+        db_query('INSERT INTO {role_selector_users_roles} (uid, rid) VALUES (%d, %d)', $account->uid, $rid);
+      }
+      break;
+	case 'validate':
+		$current_rid = db_result(db_query('SELECT rid FROM {users_roles} WHERE uid = %d', $account->uid));
+		//$current_rid = $current_role['rid'];	
+		//	error_log('Not In Array => '.$current_rid);
+		break;
+  }
+}
+
+function role_selector_menu() {
+  $items['user/select_role'] = array(
+    'title' => 'Select A Role',
+    'access arguments' => array('access content'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('role_selector_form'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function role_selector_form() {
+  global $user;
+  $current_rid = db_result(db_query('SELECT rid FROM {users_roles} WHERE uid = %d', $user->uid));
+
+  $form = array();
+
+  $form['chosen_role'] = array(
+    '#type' => 'radios',
+    '#required' => TRUE,
+    '#title' => t(''),
+	'#default_value' => $current_rid,
+    '#options' => _get_user_roles($user->uid)
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'submit',
+    '#weight' => 2
+  );
+
+  return $form;
+}
+
+function role_selector_form_submit($form, $form_values) {
+  global $user;
+
+  $role_id = $form_values["values"]["chosen_role"];
+  $new_role[2] = 'authenticated user';
+  $new_role[$role_id] = _get_user_role_name_by_role_id($role_id);
+
+  $user->roles = $new_role;
+  cache_clear_all();menu_rebuild();
+  user_save($user, array('roles' => $new_role));
+  $_SESSION['role_selector_selected_role'] = $form_values["values"]["chosen_role"];
+  drupal_set_message(t('Role successfully selected.'));
+  drupal_goto();
+}
+
+function role_selector_form_alter(&$form, $form_state, $form_id) {
+  global $user; 
+  $roles=user_roles();
+ if ($form_id == 'user_profile_form') {
+ $editable_users=array();
+ foreach($roles as $rid=>$role)
+ {
+    if (user_access('edit users with role '. $role)) {
+     $editable_users[]=$role;
+    }
+ }
+ $user_roles = array();
+ $user_roles =_get_user_roles($form['#uid']);
+ $edit_user=user_load($form['#uid']);
+ $username=$edit_user->name;
+ if(in_array('CMS Administrator',array_values($user->roles)) || in_array('VRM Admin',array_values($user->roles)) || in_array('PMO',array_values($user->roles)) || in_array('Organization POC',array_values($user->roles))){
+	foreach($user_roles as $role){
+		if(!in_array($role,$editable_users)){
+		    drupal_get_messages('status'); 
+			drupal_set_message('You do not have permission to edit '.$username,'error','false');
+			drupal_goto('user-management');
+			
+			}
+	}
+	
+  }
+
+  if(isset($form['account']['roles'])) {
+		$form['account']['roles']['#default_value'] = array_merge(array(2), array_keys(_get_user_roles($form['#uid'])));
+	} else if(isset($form['account']['roles_assign'])) {
+		$form['account']['roles_assign']['#default_value'] = array_merge(array(2), array_keys(_get_user_roles($form['#uid'])));
+	}
+    $form['#submit'][] = 'role_selector_role_submit';
+  }
+  if($form_id == 'user_confirm_delete')
+  {
+  $deletable_users=array();
+    foreach($roles as $rid=>$role)
+    {
+     if (user_access('delete users with role '. $role)) {
+      $deletable_users[]=$role;
+     }
+   }
+ $user_roles = array();
+ $user_roles =_get_user_roles($form['_account']['#value']->uid);
+ $edit_user=user_load($form['_account']['#value']->uid);
+ $username=$edit_user->name;
+ if(in_array('CMS Administrator',array_values($user->roles)) || in_array('VRM Admin',array_values($user->roles)) || in_array('PMO',array_values($user->roles)) || in_array('Organization POC',array_values($user->roles))){
+	foreach($user_roles as $role){
+		if(!in_array($role,$deletable_users)){
+		    drupal_get_messages('status'); 
+			drupal_set_message('You do not have permission to delete '.$username,'error','false');
+			drupal_goto('user-management');
+			
+			}
+	}
+	
+  }
+ }
+}
+
+function role_selector_role_submit($form, &$form_state) {	
+	global $current_rid;
+	if($form['#post']['roles']) {
+		$roles = $form['#post']['roles'];
+	} else if($form['#post']['roles_assign']) {
+		$roles = $form['#post']['roles_assign'];
+	}
+	$uid = $form['#uid'];
+  
+  // Reload user roles if provided.
+  if (isset($roles) && is_array($roles)) {
+    db_query('DELETE FROM {role_selector_users_roles} WHERE uid = %d', $uid);
+
+    foreach ($roles as $rid) {
+      db_query('INSERT INTO {role_selector_users_roles} (uid, rid) VALUES (%d, %d)', $uid, $rid);
+    }
+	db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
+	if(in_array($current_rid, $roles)) {		
+		db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $uid, $current_rid);
+	} else {
+		reset($roles);
+		db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $uid, current($roles));
+		db_query('DELETE FROM {sessions} WHERE uid = %d', $uid);
+	}
+  }
+}
+
+function _get_user_roles($uid) {
+  $rows = array();
+  $roles = db_query('   SELECT R.rid, R.name
+                          FROM {role_selector_users_roles} RSUR
+  					INNER JOIN {role} R
+  					        ON R.rid = RSUR.rid
+  					     WHERE RSUR.uid = %d
+  					  ORDER BY R.name', $uid);
+  while ($r = db_fetch_object($roles)) {
+    $rows[$r->rid] = $r->name;
+  }
+  return $rows;
+}
+
+function _get_user_role_name_by_role_id($roleid) {
+  $role_result = db_result(db_query('SELECT name FROM {role} WHERE rid = %d', $roleid));
+  if ($role_result['name']) {
+    return $role_result;
+  }
+
+  return FALSE;
+}
+
+function role_selector_views_pre_execute(&$view)
+{
+	//error_log($view->name);
+    if ($view->name == 'user_reference_list' || $view->name == 'admin_users') {		
+		$search = array('INNER JOIN {users_roles} ');
+        $replace = array('INNER JOIN {role_selector_users_roles} ');
+        $view->build_info['query'] = str_replace($search, $replace, $view->build_info['query']);
+        $view->build_info['count_query'] = $view->build_info['query'];		
+	}
+	
+	if ($view->name == 'cms_user_management' || $view->name == 'dms_user_management' || $view->name == 'urm_user_management') {		
+		$search = array('INNER JOIN {users_roles} ');
+        $replace = array('INNER JOIN {role_selector_users_roles} ');
+        $view->build_info['query'] = str_replace($search, $replace, $view->build_info['query']);
+        $view->build_info['count_query'] = $view->build_info['query'];
+		//error_log('CMS admin users list => '.$view->build_info['query']);
+	}
+}

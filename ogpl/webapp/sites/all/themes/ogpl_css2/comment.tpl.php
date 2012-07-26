@@ -2,8 +2,11 @@
 
   <div class="clear-block">
   <?php if ($submitted): ?>
-    <span class="submitted"><?php print t('!date — !username', array('!username' => theme('username', $comment), '!date' => format_date($comment->timestamp))); ?></span>
+     <div class="author"><span class="author_name"><?php print t('!username',array('!username' => theme('username', $comment)));?></span>
+    </div>
   <?php endif; ?>
+
+
 
   <?php if ($comment->new) : ?>
     <a id="new"></a>
@@ -22,5 +25,6 @@
 
   <?php if ($links): ?>
     <div class="links"><?php print $links ?></div>
+	<div class="time-elapsed"><span class="submitted"><?php print format_interval(time()-$comment->timestamp, $granularity = 1, $langcode = NULL) .' ago'; ?></span></div>
   <?php endif; ?>
 </div>

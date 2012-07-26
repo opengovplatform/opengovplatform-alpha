@@ -1,0 +1,31 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_install.  All we really need from this is to make sure
+ * that the module's weight is lower than other's, so that our hook_init fires
+ * before everyone else's
+ *
+ */
+function encrypt_submissions_install() {
+  db_query("UPDATE {system} SET weight = -999 WHERE name = 'encrypt_submissions'");
+}
+ 
+
+/**
+ * In this update, we make sure the weight has been set low as in hook_install
+ *
+ */
+function encrypt_submissions_update_7100() {
+  db_query("UPDATE {system} SET weight = -999 WHERE name = 'encrypt_submissions'");
+}
+
+
+/**
+ * Implementation of hook_uninstall.  We want to remove our
+ * extra variables from the variable table, to be tidy.
+ *
+ **/
+function encrypt_submissions_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'encrypt_submissions%%' ");
+}

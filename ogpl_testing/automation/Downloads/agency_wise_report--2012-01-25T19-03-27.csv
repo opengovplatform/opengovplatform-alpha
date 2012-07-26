@@ -1,0 +1,24 @@
+Agency,Agency Short Name,Sub-Agency Name,Sub-Agency Short Name,Raw Data,Documents,Apps,Tools,Services,Total,Date Of last Submission
+Commerce Department,COM,,,0,1,3 (1),0,1 (1),5 (2),25/01/2012
+, ,Commerce ,Com,0,0,1,0,0,1,25/01/2012
+, ,Commerce Department ,COM,0,0,2 (1),0,1 (1),3 (2),20/01/2012
+, ,Hospitals ,Hospitals,0,1,0,0,0,1,19/12/2011
+Defense Department,DEF,,,3 (1),0,1,0,0,4 (1),26/12/2011
+, ,Defence ,def,2 (1),0,0,0,0,2 (1),26/12/2011
+, ,Defense Department ,DEF,1,0,1,0,0,2,18/12/2011
+Education Department,EDU,,,2,1 (1),0,0,1 (1),4 (2),05/01/2012
+, ,Education ,edu,0,0,0,0,1 (1),1 (1),05/01/2012
+, ,Education Department ,EDU,2,0,0,0,0,2,18/12/2011
+, ,Office of Scientific and Technical Information,,0,1 (1),0,0,0,1 (1),19/12/2011
+General Services...,GSD,,,15 (1),2 (2),6 (2),1 (1),0,24 (6),12/01/2012
+, ,Airlines  ,aIR,10 (1),0,0,0,0,10 (1),02/01/2012
+, ,General ,Gen,1,0,0,0,0,1,26/12/2011
+, ,General Services Department ,GSD,3,1 (1),5 (2),0,0,9 (3),12/01/2012
+, ,Retail ,Retail,0,1 (1),0,0,0,1 (1),19/12/2011
+, ,Service ,Ser,0,0,0,1 (1),0,1 (1),05/01/2012
+, ,Services Department ,SD,1,0,0,0,0,1,01/01/2012
+, ,TAC ,TAC,0,0,1,0,0,1,12/01/2012
+Forests and Mining,FM,,,1 (1),0,0,0,0,1 (1),20/01/2012
+, ,FOREST ,Forest,1 (1),0,0,0,0,1 (1),20/01/2012
+ 
+Total,,,,21(3),4(3),10(3),1(1),2(2),38(12),20/01/2012, 

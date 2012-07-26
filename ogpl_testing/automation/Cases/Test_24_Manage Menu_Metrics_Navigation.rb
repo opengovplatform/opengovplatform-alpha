@@ -5,11 +5,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Test_24_Manage Menu_Metrics_Navigation_input.rb'
 require 'InputRepository/Config.rb'
 require 'lib/NIC_Lib.rb'
@@ -77,7 +77,7 @@ end
         
       @browser1.goto("#{$Site_URL}admin/build/menu-customize/menu-metricsmenu/add")
       @browser1.text_field(:id, "edit-menu-link-path").set("#{$url}")
-      @browser1.text_field(:id, "edit-menu-link-title").set("#{$title}")
+      @browser1.text_field(:id, "edit-menu-link-title").set("#{$title1}")
       @browser1.button(:value,"Save").click
 
 end
@@ -86,7 +86,7 @@ end
       driver = Selenium::WebDriver.for :firefox, :profile => "Selenium"
       @browser = Watir::Browser.new driver
       @browser.goto("#{$Site_URL}agency-publications/agency-wise")
-      @browser.html.should include("#{$title}")
+      @browser.html.should include("#{$title1}")
       @browser.close
       puts "Checked on front end site"
   end
@@ -95,9 +95,10 @@ end
       driver = Selenium::WebDriver.for :firefox, :profile => "Selenium"
       @browser = Watir::Browser.new driver
       @browser.goto("#{$Site_URL}agency-publications/agency-wise")
-      @browser.link(:text,"#{$title}").click
+      @browser.link(:text,"#{$title1}").click
+      sleep 8
      #@browser.window(:url => "#{$url}").use do
-      @browser.html.should include("#{$title}")
+      #@browser.html.should include("#{$title1}")
       @browser.close
       puts "Checked on front end site"
       #end

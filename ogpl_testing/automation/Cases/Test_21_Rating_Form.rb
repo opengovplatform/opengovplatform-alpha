@@ -3,11 +3,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'lib/NIC_Lib.rb'
 require 'InputRepository/Config.rb'
 require 'InputRepository/Test_21_Rating_form_Input.rb'
@@ -26,8 +26,8 @@ describe "Submit Ratings form" do
  end
     
     it "To Navigate to Rate a dataset" do
-	@browser.goto("#{$Site_URL}search/apachesolr_search/?filters=type%3Adataset%20ss_cck_field_ds_catlog_type%3Acatalog_type_raw_data&solrsort=created%20desc")
-	@browser.goto("#{$Site_URL}dataset/2008-home-mortgage-disclosure-act-hmda-loan-application-register-lar-data")
+	@browser.goto("#{$Site_URL}catalogs/?filter=catalog_type%3Acatalog_type_raw_data")
+	@browser.goto("#{$Site_URL}dataset/parliament-visitor-records-requests")
       sleep 8
       
     end
@@ -77,7 +77,7 @@ describe "Submit Ratings form" do
      it "To go to the Feedback Details_Notes" do
 		@browser1.link(:text, "Notes").click
 		sleep 5
-		@browser1.text.should include("Add Note: (Required) :") 
+		@browser1.text.should include("Add Note") 
          
        end
     

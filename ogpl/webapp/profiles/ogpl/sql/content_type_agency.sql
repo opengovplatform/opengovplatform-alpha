@@ -1,1 +1,0 @@
-INSERT IGNORE INTO `content_type_agency` VALUES (546,177,'Commerce Department','COM'),(547,178,'Defense Department','DEF'),(548,179,'Education Department','EDU'),(549,180,'General Services Department','GSD'),(1125,328,'Department of Energy ','DOE'),(13311,440,'Other Agency','Other'),(13327,447,'Forests And Mining','FM');

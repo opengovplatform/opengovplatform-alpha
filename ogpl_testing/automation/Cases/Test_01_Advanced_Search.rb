@@ -3,11 +3,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Config.rb'
 require 'InputRepository/Test_01_Advanced_search_Input.rb'
 
@@ -121,7 +121,7 @@ describe "To Verify Advanced Search on OGPL site" do
 				@browser.goto("#{$Site_URL}search/advancedsearch")
 				sleep 10
 				@browser.text_field(:name, "any_words").set("#{$search_any_words}")
-				@browser.select_list(:name, "file_type").select("#{$file_type}")
+				#@browser.select_list(:name, "file_type").select("#{$file_type}")
 				@browser.select_list(:id, "edit-results-per-page").select("#{$results_per_page}")
 				@browser.button(:id, "edit-submit").click
 				sleep 10

@@ -1,0 +1,370 @@
+<?php
+// $Id$
+
+
+/**
+ * Implementation of hook_menu
+ *
+ **/
+function encrypt_submissions_menu() {
+  $items = array();
+  
+  $items["encrypt-submissions/generate-keypair"] = array(
+    "page callback" => "encrypt_submissions_generate_keypair",
+    "access arguments" => array("access encrypt submissions"),
+    "type" => MENU_CALLBACK,
+  );
+  
+  $items["admin/settings/encrypt-submissions"] = array(
+    "title" => "Encrypt submissions",
+    "page callback" => "drupal_get_form",
+    "page arguments" => array("encrypt_submissions_admin_form"),
+    "access arguments" => array("administer encrypt submissions"),
+    "type" => MENU_NORMAL_ITEM,
+  );   
+  
+  return $items;
+}
+
+/**
+ * Implementation of hook_perm.
+ *
+ **/
+function encrypt_submissions_perm() {
+  $perms = array(
+    "administer encrypt submissions",
+    "access encrypt submissions"
+  );
+  
+  return $perms;
+  
+}
+
+
+/**
+ * This function will check to see if the jcryption libraries have been installed
+ * correctly, and warn the user if they have not.
+ * 
+ * Depending on the argument, it will let the user know if they HAVE been installed
+ * correctly.
+ *
+ **/
+function encrypt_submissions_check_library_files_exist($bool_notify_correct_installation = TRUE) {
+
+  $err = "";
+  
+  $original_location = variable_get("encrypt_submissions_jcryption_location", "");
+  
+  $jcryption_location = drupal_get_path("module", "encrypt_submissions") . "/jcryption/";
+  
+  $js_file = "$jcryption_location/jquery.jcryption.js";
+  $php_file = "$jcryption_location/jcryption.php";
+
+  if (!file_exists($js_file) || !file_exists($php_file)) {
+    // Attempt to see if we are using libraries API
+    if (function_exists("libraries_get_path")) {
+      $jcryption_location = libraries_get_path("jcryption");
+      $js_file = "$jcryption_location/jquery.jcryption.js";
+      $php_file = "$jcryption_location/jcryption.php";
+    }
+  }
+  
+    
+  variable_set("encrypt_submissions_jcryption_location", $jcryption_location);
+  
+  if ($original_location != $jcryption_location) {
+    // Make it re-display the message, letting us know we changed something.
+    unset($_SESSION["es_notified_correct"]);
+  }
+  
+  if (!file_exists($js_file)) {
+    $err .= "<p>" . t("The file jquery.jcryption.js could not be found.  It should be named correctly
+               and located at: ") . $js_file . "</p>";
+  }
+
+
+  if (!file_exists($php_file)) {
+    $err .= "<p>" . t("The file jcryption.php could not be found.  It should be named correctly
+               and located at: ") . $php_file . "</p>";
+  }
+
+  if ($err) {
+    drupal_set_message($err, "error");
+    unset($_SESSION["es_notified_correct"]); // This is used below, to make sure the message is
+                                              // not displayed twice.
+  }
+  else if ($bool_notify_correct_installation && !isset($_SESSION["es_notified_correct"])){
+    drupal_set_message(t("The jCryption library files appear to be installed correctly at $jcryption_location."));
+    $_SESSION["es_notified_correct"] = TRUE;  // This prevents the message from being seen twice.
+  }  
+  
+}
+
+
+/**
+ * This is our admin/settings/encrypt-submissions form.
+ *
+ **/
+function encrypt_submissions_admin_form() {
+  $form = array(); 
+
+  // Let the user know if they have installed the jcryption libraries correctly.    
+  encrypt_submissions_check_library_files_exist();  
+  
+  $form["encrypt_submissions_visibility"] = array(
+    "#title" => t("Enable Encrypt Submissions for specific forms"),
+    "#type" => "radios",
+    "#options" => array("only_listed" => t("Only the listed forms"), "all_except" => t("All except those listed")),
+    "#default_value" => variable_get("encrypt_submissions_visibility", "only_listed"),
+    "#description" => t("Be aware that this module will slow down the submission of forms. It is unadvised
+                       to enable the module on forms which require quick submission times."),
+  ); 
+     
+  $form["encrypt_submissions_forms"] = array(
+    "#title" => t("List form_id's, one per line"),
+    "#type" => "textarea",
+    "#default_value" => variable_get("encrypt_submissions_forms", ""),
+    "#description" => t("Some common form id's:
+                        <br> Login: <b>user_login</b> and <b>user_login_block</b>
+                        <br> Registration: <b>user_register_form</b>
+                        <br><br>
+                        <b>Don't forget-- if you want to encrypt login or registration submissions</b>,
+                        you must give anonymous users the Access Encrypted Submissions privilege!
+                        "), 
+  ); 
+   
+  $form["encrypt_submissions_encrypt_msg"] = array(
+    "#title" => t("Encrypt message"),
+    "#type" => "textfield",
+    "#default_value" => variable_get("encrypt_submissions_encrypt_msg", "Encrypting..."),
+    "#description" => t("This is the message the user sees while the form is performing
+                       the encryption operation.  Enter ") . "<b>none</b>" . t(" if you do not wish any
+                       message to appear."),
+  ); 
+   
+
+  $form["encrypt_submissions_disable_jquery144"] = array(
+    "#title" => t("Advanced - Do not load included jQuery 1.4.4"),
+    "#type" => "checkbox",
+    "#default_value" => variable_get("encrypt_submissions_disable_jquery144", 0),
+    "#description" => t("If checked, this module will NOT attempt to load the included
+                         jQuery 1.4.4 file.  Only check this if you are positive you
+                         do not need it."),
+  ); 
+  
+  
+  
+  
+  $form["mark1"] = array(
+    "#type" => "markup",
+    "#markup" => "<p><i>" . t("Please note that the jCryption libraries were NOT programmed by 
+                    this module's maintainer.  They were mostly programmed by 
+                    Daniel Griesser, and comprise several other libraries by different
+                    authors.  Please visit http://www.jcryption.org/about for a 
+                    full list of credits.") . "</i></p>", 
+  );
+       
+   
+  return system_settings_form($form);
+}
+
+
+
+/**
+ * This function, taken largely from the examples which come with jCryption,
+ * is called by AJAX and returns the relavant values needed to encrypt our form.
+ * It also places those same values into the SESSION, so we can decrypt it after the
+ * form submits.
+ *
+ * For a little insurance, we will also create a unique token (based on the site's
+ * private key) and place that in the session.  That way we can later on be sure
+ * that the form submission is legitimate, before we overwrite our $_POST.
+ *
+ **/
+function encrypt_submissions_generate_keypair() {
+  
+ $jcryption_location = variable_get("encrypt_submissions_jcryption_location", "");
+  $php_file = "$jcryption_location/jcryption.php";
+  if (!file_exists($php_file)) {
+    encrypt_submissions_check_library_files_exist();
+    $jcryption_location = variable_get("encrypt_submissions_jcryption_location", "");
+    $php_file = "$jcryption_location/jcryption.php";    
+  }   
+  
+  require_once($php_file);
+  
+  $keyLength = 256;  // If this is set too high, then key generation can take a long time.
+                     // 256 bit should be plenty for the target users of this module.  If you
+                     // really need anything more than that, perhaps you should invest
+                     // in an SSL cert after all!
+  $jCryption = new jCryption();
+  
+  $keys = $jCryption->generateKeypair($keyLength);
+	$_SESSION["es_e"] = array("int" => $keys["e"], "hex" => $jCryption->dec2string($keys["e"],16));
+	$_SESSION["es_d"] = array("int" => $keys["d"], "hex" => $jCryption->dec2string($keys["d"],16));
+	$_SESSION["es_n"] = array("int" => $keys["n"], "hex" => $jCryption->dec2string($keys["n"],16));
+	
+  // Create a token based on the e value and the site's private key.
+  $_SESSION["es_token"] = md5(drupal_get_private_key() . $_SESSION["es_e"]);
+  
+
+	echo '{"e":"' . $_SESSION["es_e"]["hex"] . '","n":"' . $_SESSION["es_n"]["hex"] . '","maxdigits":"' . intval($keyLength*2/16+3) . '"}';
+
+	return;
+}
+
+
+function encrypt_submissions_form_alter(&$form, &$form_state, $form_id) {
+  // Let's get the listed form_id's that the administrator entered
+  // in the config form, and explode them by \n
+  $listed_form_ids = explode("\n", variable_get("encrypt_submissions_forms", ""));
+  // Go through and make sure they are trimmed of whitespace.
+  foreach($listed_form_ids as $key => $val) { $listed_form_ids[$key] = trim($val); }
+  
+  // Also, get the visibility setting:
+  $visibility = variable_get("encrypt_submissions_visibility", "only_listed");
+  if ($visibility == "all_except" && in_array($form_id, $listed_form_ids)) {
+    // The user specifically said NOT to use this module on this form_id,
+    // so harmlessly return.
+    return;
+  }  
+  else if ($visibility == "only_listed" && !in_array($form_id, $listed_form_ids)) { 
+    // The user did not specifically say they wanted this form_id encrypted, so, harmlessly
+    // return.   
+    return;
+  }
+  else {
+    // If we made it here, it means either the user went out of their way to state
+    // they wanted the form encrypted, OR, they did not list it as one of the forms
+    // to exclude.  Either way, we should go ahead and attach the jCryption behavior.
+        
+    // Has the current logged in user been given the permission
+    // to even use this module?  If not, harmlessly return.  
+    if (!user_access("access encrypt submissions")) {
+      return;
+    }
+  
+    // Get the DOM form_id.
+    $dom_form_id = $form["#id"];
+  
+    // Add the encryption status div to the bottom of the form.
+    $encrypt_msg = variable_get("encrypt_submissions_encrypt_msg", "Encrypting...");
+    
+    $markup = "<span></span>";
+    if (trim(strtolower($encrypt_msg)) != "none") {
+      $markup = "<div id='encrypt_submissions_encrypt_msg_$dom_form_id'>
+                      <span id='encrypt_submissions_status_$dom_form_id'
+                           class='encrypt-submissions-status'>$encrypt_msg                             
+                      </span>
+                    </div>";
+    }
+    
+    $form["encrypt_submissions_status"] = array(
+      "#type" => "markup",
+      "#dom" => $dom_form_id, // saving form dom id for later
+      "#weight" => 999999,  // Trying to make it appear at the very bottom.
+      "#value" => $markup,
+      "#after_build" => array("encrypt_submissions_add_form_css_js"),  // important if the form fails validation, we still get the CSS and JS added in.                      
+    );
+  }
+  
+}
+
+
+/**
+ * We will use this function as an #after_build to ensure we always
+ * attach our CSS and JS to the page.
+ *
+ **/
+function encrypt_submissions_add_form_css_js($form_element, &$form_state) {
+  
+  $form_id = $form_state["values"]["form_id"];
+  $dom_form_id = $form_element["#dom"];
+  
+  // Add the jCryption javascript and CSS to the page.
+  drupal_add_css(drupal_get_path("module", "encrypt_submissions") . "/css/encrypt_submissions.css");
+
+  // figure out correct URL path to jCryption
+  $jcryption_location = variable_get("encrypt_submissions_jcryption_location", "");
+  $js_file = "$jcryption_location/jquery.jcryption.js";
+  if (!file_exists($js_file)) {
+    encrypt_submissions_check_library_files_exist();
+    $jcryption_location = variable_get("encrypt_submissions_jcryption_location", "");
+    $js_file = "$jcryption_location/jquery.jcryption.js";
+  }
+  
+  // jQuery 1.4+, jCryption and encryption_submissions.js need necessarily load in sequence
+  // to ensure no interference with jQuery scripts that may require Drupal-supplied version.
+  // It seems that use of the $type parameter to drupal_add_js() guarantees just that (even
+  // with Javascript compression turned on).
+
+  // @todo check if jquery_update module is installed, and use that instead
+
+  if (!variable_get("encrypt_submissions_disable_jquery144", 0)) {
+    // Add in the 1.4.4 version of jQuery which is packaged with encrypt_submissions  
+    drupal_add_js(drupal_get_path("module", "encrypt_submissions") . "/js/jq1.4.4/jquery.min.js", "encrypt_submissions");
+  }
+  
+  // Add in the jCryption file.
+  drupal_add_js($js_file, "encrypt_submissions");
+
+  drupal_add_js(drupal_get_path("module", "encrypt_submissions") . "/js/encryption_submissions.js", "encrypt_submissions");
+
+  // We need to add this form's ids to an array in javascript, so our js can attach
+  // the jCryption later.
+  drupal_add_js(array('encrypt_submissions' => array('encryptForms' => array($form_id => $dom_form_id))), 'setting');
+
+  return $form_element;
+}
+
+
+function encrypt_submissions_init() {
+
+  // Has the current logged in user been given the permission
+  // to even use this module?  If not, harmlessly return.  
+  if (!user_access("access encrypt submissions")) {
+    return;
+  }
+  
+  // Create a javascript setting for later use.
+  drupal_add_js(array('encrypt_submissions' => array('baseUrl' => $GLOBALS["base_url"])), 'setting');
+
+  // We have been passed an encrypted form through the POST.  We need to decrypt it, 
+  // and re-assign the $_POST to the new result.
+  if (isset($_POST["jCryption"]) && isset($_SESSION["es_e"]) && isset($_SESSION["es_d"]) && isset($_SESSION["es_n"])) {
+
+    $jcryption_location = variable_get("encrypt_submissions_jcryption_location", "");
+    $php_file = "$jcryption_location/jcryption.php";
+
+    if (!file_exists($php_file)) {
+      encrypt_submissions_check_library_files_exist();
+      $jcryption_location = variable_get("encrypt_submissions_jcryption_location", "");
+      $php_file = "$jcryption_location/jcryption.php";      
+    }   
+    
+    
+    // We need to test to make sure the es_token in the SESSION is valid, proving
+    // that this is not a hacking attempt.
+    // We will generate a token now, and test it against the one in the SESSION.
+    $test_es_token = md5(drupal_get_private_key() . $_SESSION["es_e"]);
+    if ($_SESSION["es_token"] != $test_es_token) {
+      drupal_set_message("Invalid encryption token. Rejecting submission.", "error");
+      return; 
+    }  
+  
+    // If we made it here, then everything must be okay with the submission, and we can
+    // proceed.
+    require_once($php_file);
+    $jCryption = new jCryption();
+    $var = $jCryption->decrypt($_POST['jCryption'], $_SESSION["es_d"]["int"], $_SESSION["es_n"]["int"]);
+    
+    unset($_SESSION["es_e"]);
+    unset($_SESSION["es_d"]);
+    unset($_SESSION["es_n"]);
+    unset($_SESSION["es_token"]);
+    
+    parse_str($var,$result);
+    $_POST = $result;    
+  }  
+
+}

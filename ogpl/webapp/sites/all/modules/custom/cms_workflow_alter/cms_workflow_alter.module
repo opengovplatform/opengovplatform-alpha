@@ -39,11 +39,4 @@ if($form_id=='user_profile_form')
 	  '#attributes' => array('onClick' => 'history.go(-1); return false;'),
       );
   }
-  if($form_id=='system_site_information_settings')
-  {	$form['site_slogan']['#title']='Country Name';
-	$form['site_slogan']['#description']='This country name will appear in certain pages on the site';
-	$form['site_slogan']['#weight']='1';
-	$form['cron_safe_threshold']['#weight']='7';
-	$form['google_map_key']['#weight']='15';
-  }
 }

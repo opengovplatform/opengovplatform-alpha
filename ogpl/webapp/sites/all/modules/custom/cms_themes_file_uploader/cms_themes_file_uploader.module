@@ -1,0 +1,135 @@
+<?php
+define('CMS_THEMES_COLOR', 'color');
+define('CMS_THEMES_CONTRAST', 'contrast');
+
+include_once('cms_themes_file_uploader.features.inc');
+
+function cms_themes_file_uploader_init() {
+  if (!empty($_GET['switch'])) {
+    setCookie("_SERVER_SIDE_THEME_COLOR", $_GET['switch']);
+    setCookie("_SERVER_SIDE_CONTRAST", 'false');
+  }
+  if (!empty($_GET['contrast'])) {
+    setCookie("_SERVER_SIDE_CONTRAST", $_GET['contrast']);
+  }
+
+  drupal_add_js(drupal_get_path('module', 'cms_themes_file_uploader') . '/cms_themes_file_uploader.js');
+}
+
+function cms_themes_file_uploader_preprocess_page(&$variables) {
+  global $theme_key;
+  $html = NULL;
+  $nodes = cms_themes_file_uploader_get_themes();
+  foreach ($nodes as $node) {
+    $filepath = file_create_url($node->field_theme_file[0]['filepath']);
+    if ($node->field_theme_list_select[0]['value'] != $theme_key) {
+      continue;
+    }
+    $html .= '<link type="text/css" rel="alternate stylesheet" ' . drupal_attributes(array(
+      'href' => $filepath,
+      'title' => $node->title,
+    )) . ' />';
+  }
+
+  $variables['styles'] .= $html;
+}
+
+function cms_themes_file_uploader_block($op = 'list', $delta = 0) {
+  $blocks = array();
+  switch ($op) {
+    case 'list':
+      $blocks[CMS_THEMES_COLOR]['info'] = t('Theme Color Options Block');
+      $blocks[CMS_THEMES_COLOR]['cache'] = BLOCK_NO_CACHE;
+
+      $blocks[CMS_THEMES_CONTRAST]['info'] = t('Theme Contrast Options Block');
+      $blocks[CMS_THEMES_CONTRAST]['cache'] = BLOCK_NO_CACHE;
+      break;
+    case 'view':
+      switch ($delta) {
+        case CMS_THEMES_COLOR:
+          $blocks['subject'] = '<none>';
+          $blocks['content'] = cms_themes_file_uploader_block_content(CMS_THEMES_COLOR);
+          break;
+        case CMS_THEMES_CONTRAST:
+          $blocks['subject'] = '<none>';
+          $blocks['content'] = cms_themes_file_uploader_block_content(CMS_THEMES_CONTRAST);
+          break;
+      }
+  }
+  return $blocks;
+}
+
+function cms_themes_file_uploader_file_download($filepath) {
+  $filepath = file_create_path($filepath);
+  if (!preg_match("/.*\/themes\/.*\/css/", $filepath)) {
+    return array();
+  }
+  return array(
+    'Cache-Control: public',
+    'Expires: ' . date(DATE_RFC1123, time() + 3 * 24 * 60 * 60),
+    'Pragma: public',
+    'Content-disposition: inline'
+  );
+}
+
+function cms_themes_file_uploader_block_content($type) {
+  global $base_url;
+
+  $nodes = cms_themes_file_uploader_get_themes($type);
+
+  $block_content = NULL;
+
+  foreach ($nodes as $node) {
+    if ($node->field_theme_type[0]['value'] <> $type) {
+      continue;
+    }
+    $image_color = file_create_url($node->field_theme_logo_image[0]['filepath']);
+
+    $block_content .= l("<img width='$node->width' height='$node->height' alt='$node->title' src='$image_color' />",
+      $base_url . request_uri(), array(
+        'html' => TRUE,
+        'attributes' => array(
+          'title' => $node->title,
+          'onclick' => 'chooseStyle("' . $node->title . '", 60,"' . $type . '")'
+        )
+      ));
+  }
+  return $block_content;
+
+}
+
+function cms_themes_file_uploader_get_themes($type = NULL) {
+  $result = db_query("SELECT nid FROM node WHERE type = 'theme_file_uploader' AND status = 1");
+  $nodes = array();
+
+  $nodes[0] = new stdClass();
+  $nodes[0]->field_theme_type[0]['value'] = $type;
+
+  if ($type == CMS_THEMES_COLOR) {
+    $nodes[0]->field_theme_logo_image[0]['filepath'] = 'grey.jpg';
+    $nodes[0]->title = "Grey Theme";
+    $nodes[0]->width = 14;
+    $nodes[0]->height = 12;
+  }
+  else {
+    $nodes[0]->field_theme_logo_image[0]['filepath'] = 'textNormal.gif';
+    $nodes[0]->title = "Standard Contrast";
+    $nodes[0]->width = 21;
+    $nodes[0]->height = 18;
+  }
+
+  while ($node = db_fetch_object($result)) {
+    $nodes[$node->nid] = node_load($node->nid);
+    if ($type == CMS_THEMES_COLOR) {
+      $nodes[$node->nid]->width = 14;
+      $nodes[$node->nid]->height = 12;
+    }
+    else {
+      $nodes[$node->nid]->width = 21;
+      $nodes[$node->nid]->height = 18;
+    }
+
+  }
+  return $nodes;
+}
+

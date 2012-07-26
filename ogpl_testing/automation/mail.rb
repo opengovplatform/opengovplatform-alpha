@@ -13,16 +13,24 @@ require 'net/pop'
 require 'InputRepository/Mail_Config.rb'
 
 
-system ("test.bat")
+#system ("test.bat")
 
 $wd=Dir.pwd
-filename = $wd+"/Report.html"
+
+filepath = $wd+"/report_file_name.txt"
+$file_1 = File.open(filepath)
+$rep_fl_nm = $file_1.gets
+    puts $rep_fl_nm
+$file_1.close;
+filename = $wd + "/" + $rep_fl_nm.chomp
+puts filename
 
 # Read a file and encode it into base64 format
 filecontent = File.read(filename)
 encodedcontent = [filecontent].pack("m")   # base64
 
 filename = filename.sub(/^.+\//, "")
+#filename = filename.sub("/","\\")
 
 marker = "AUNIQUEMARKER"
 

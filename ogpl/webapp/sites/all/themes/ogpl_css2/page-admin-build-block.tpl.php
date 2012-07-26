@@ -1,5 +1,4 @@
-<?php global $base_url, $site_name; $user;
-if($base_url == "http://demodata.nic.in") { header("location: http://demodata.nic.in"); exit; }
+<?php global $base_url, $site_name, $user;
 $user_name=$user->name;
 $user_name=str_replace('@','[at]',$user_name);
 $user_name=str_replace('.','[dot]',$user_name);

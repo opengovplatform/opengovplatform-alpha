@@ -1,0 +1,3 @@
+name= Form Validation
+description = Validates all cck fields
+core = 6.x

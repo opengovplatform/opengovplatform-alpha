@@ -1,7 +1,0 @@
-core = "6.x"
-dependencies[] = "fe_block"
-description = "Static html to be displayed in catalog tab Major Events"
-features[fe_block_boxes][] = "front_end_major_events_block"
-features[fe_block_settings][] = "block-front_end_major_events_block"
-name = "Front End Major Events Tab"
-package = "Features"

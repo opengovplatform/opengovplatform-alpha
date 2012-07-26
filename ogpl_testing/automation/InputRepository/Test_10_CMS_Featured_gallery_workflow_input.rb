@@ -2,7 +2,7 @@
 
 $title = 'TEST_FEAT_GAL'
 $instruction = "Test Featured Gallery Instruction"
-$date = '12 Feb 2013'
+$date = '2 Feb 2014'
 $days = '30'
 $wd = Dir.pwd
 $img_path = $wd + "/InputRepository/FEAT_GALLERY.jpg"

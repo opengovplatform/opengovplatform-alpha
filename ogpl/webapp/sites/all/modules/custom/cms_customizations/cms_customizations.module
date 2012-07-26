@@ -26,9 +26,6 @@ function cms_customizations_form_alter(&$form, &$form_state, $form_id)
 {
 	$form['#attributes']['autocomplete'] = 'off';
     switch ($form_id) {
-        case 'user_login':
-            $form['#after_build'][] = 'cms_customizations_reorder_login_form';
-            break;
         case 'views_exposed_form':
             switch ($form['#id']) {
                 case 'views-exposed-form-content-mgmt-contentcreator-block-path-1': // Content Creator
@@ -355,15 +352,6 @@ function cms_customizations_init() {
   header("Cache-Control = 'Proxy-revalidate'");
   header('Pragma: no-cache');
   header("Expires: Fri, 30 Nov 1984 11:30:00 IST");
-}
-
-function cms_customizations_reorder_login_form($form, &$form_state) {
-  $form['name']['#weight'] = -5;
-  $form['pass']['#weight'] = -4;
-  $form["verification"]['#weight'] = -3;
-  $form['captcha']['#weight'] = -2;
-  $form['submit']['#weight'] = -1;
-  return $form;
 }
 
 function cms_statistics_top_visitors()

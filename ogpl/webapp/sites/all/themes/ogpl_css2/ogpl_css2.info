@@ -1,22 +1,15 @@
 name = Theme - II (OGPL with CSS2)
 description = Theme designed for CSS2 compliant browsers
-version = VERSION 1.x
+version = VERSION
 core = 6.x
 engine = phptemplate
 
-;stylesheets[all][] = style.css
-;stylesheets[all][] = small.css
-;stylesheets[all][] = bigger.css
-;stylesheets[all][] = high.css
-
-scripts[] = js/swithcer.js
 scripts[] = js/script.js
 
 regions[header_flag] = Header Flag Block
 regions[text_resize] = Text Resize Block
 regions[header_options] = Header Options
 regions[header_flags] = Header Flags
-;regions[search_field] = Search Field
 regions[banner_links] = Banner Links
 regions[banner] = Banner
 regions[metrics_menu] = Metrics Menu
@@ -31,14 +24,7 @@ regions[footer_links] = Footer Links
 regions[site_hosting_details] = Site Hosting Details
 regions[site_ownership_details] = Site Ownership Details
 regions[hidden_content] = Hidden Content
-
 regions[sidebar_first] = sidebar first
 regions[dms_header_primary] = dms header primary menu
 regions[dms_header_whatsnew] = dms header whats new
 regions[dms_header_dataset] = dms header dataset
-
-; Information added by drupal.org packaging script on January 1, 1970 - 00:00
-version = "6.x-1.3"
-core = "6.x"
-project = "cms"
-datestamp = "1297194689"

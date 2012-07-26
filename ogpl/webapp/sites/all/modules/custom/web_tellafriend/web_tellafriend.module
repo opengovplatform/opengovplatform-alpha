@@ -65,7 +65,7 @@ function web_tellafriend_menu() {
     'type'             => MENU_CALLBACK
   );
   $items['forward'] = array(
-    'title'            => t('Tell A Friend'),//variable_get('forward_email_title', 'Tell A Friend'),
+    'title'            => t('Tell A Friend'),
     'page callback'    => 'web_tellafriend_page',
     'access arguments' => array('access forward'),
     'type'             => MENU_CALLBACK
@@ -585,51 +585,30 @@ function web_tellafriend_form(&$form_state, $path = NULL, $title = NULL, $nodeap
 	'#id'=> 'edit-name',
  );
     $form['message']['email'] = array(
-    '#type' => 'textfield',
+    '#type' => 'hidden',
     '#title' => t('Your E-mail Address'),
     '#size' => 58,
     '#maxlength' => 256,
-	//'#rules' => array('email',),
     '#required' => TRUE,
+    '#value' => variable_get('site_mail', '')
   );
   $form['message']['recipients'] = array(
     '#type' => 'textarea',
     '#title' => t('Send To'),
-    //'#default_value' => str_replace(', ', "\n", $recipients),
     '#cols' => 50,
     '#rows' => 5,
-	//'#rules' => array('email',),
     '#description' => t('Enter multiple addresses on separate lines or separate them with commas.'),
     '#required' => TRUE,
   );
 
-/*
-  if (($emailtype == 'page') && ($nodeapi == FALSE)) {
-    $form['message']['page'] = array(
-      '#type' => 'item',
-    //  '#title' => t('You are going to email the following'),
-      '#value' => l($title, $path, $cid),
-    );
-  }
-
-  $form['message']['subject'] = array(
-    '#type' => 'item',
-   // '#title' => t('Message Subject'),
-   // '#value' => t(variable_get('forward_'. $emailtype .'_subject', '!name has sent you a message from !site'), array('!name' => t('(Your Name)'), '!site' => variable_get('site_name', 'drupal'))),
-    '#description' => '',
-    '#attributes' => array('id' => 'forward-page-subject'),
-  );
-  */
   $form['message']['body'] = array(
     '#type' => 'item',
-  //  '#title' => t('Message Body'),
- //   '#value' => t(variable_get('forward_'. $emailtype .'_message', '!name thought you would like to see the !site web site.'), array('!name' => t('(Your Name)'), '!site' => variable_get('site_name', 'drupal'))),
     '#description' => '',
     '#attributes' => array('id' => 'forward-page-body'),
   );
   if (variable_get('forward_message', 1) != 0) {
     $form['message']['message'] = array(
-      '#type' => 'textarea',
+      '#type' => 'hidden',
       '#title' => t('Message'),
       '#default_value' => '',
       '#cols' => 50,
@@ -677,8 +656,6 @@ function web_tellafriend_form(&$form_state, $path = NULL, $title = NULL, $nodeap
   }
 
   if ($user->uid != 0) {
-    //$form['message']['email']['#default_value'] = $user->mail;
-    //$form['message']['email']['#disabled'] = TRUE;
     $form['message']['email']['#type'] = 'hidden';
     $form['message']['email']['#value'] = $user->mail;
     $form['message']['name']['#default_value'] = $user->name;
@@ -738,9 +715,6 @@ function web_tellafriend_form_validate($form, &$form_state) {
   if (user_validate_mail($form_state['values']['email'])) {
     form_set_error('email', t('<ul><li><label>The value in Your E-mail Address is not a valid email address.</label></li></ul>'));
   }
-   /*if(!ctype_alpha($form_state['values']['name'])){
-   form_set_error('name', t('<ul><li><label>Name cannot include special characters or numbers.</label></li></ul>'));
-   }*/
   if (!$form_state['values']['name']) {
     form_set_error('name', t('<ul><li><label>You must enter your name.</label></li></ul>'));
   }
@@ -894,7 +868,7 @@ function web_tellafriend_form_submit($form, &$form_state) {
   
   $from = variable_get('forward_sender_address', '');
   if (empty($from)) {
-    $from = $form_state['values']['email'];//variable_get('site_mail', '');
+    $from = variable_get('site_mail', '');
   }
 
   $params['from'] = trim(mime_header_encode($form_state['values']['name']) .' <'. $from .'>');
@@ -920,8 +894,6 @@ function web_tellafriend_form_submit($form, &$form_state) {
   variable_set('forward_total', variable_get('forward_total', 0) +1);
   variable_set('forward_recipients', variable_get('forward_recipients', 0) + count($recipients));
 
- // drupal_set_message(check_plain(t(variable_get('forward_thankyou', 'Thank you for your help in spreading the word about !site. We appreciate your help.'), array('!site' => variable_get('site_name', 'drupal')))), 'status');
-  
   if (variable_get('forward_thankyou_send', FALSE)) {
     $thankyou_params = array(
       'from' => variable_get('forward_sender_address', variable_get('site_mail', '')),
@@ -1224,8 +1196,6 @@ function web_tellafriend_block($op = 'list', $delta = 0, $edit = array()) {
       switch ($delta) {
         case 0:
           $block_options = array(
-            /*'today' => t('Most Emailed Today'),
-            'week' => t('Most Emailed This Week'),*/
             'allTime' => t('Most Emailed of All Time'),
             'recent' => t('Most Recently Emailed')
           );
@@ -1263,18 +1233,6 @@ function web_tellafriend_block($op = 'list', $delta = 0, $edit = array()) {
         case 0:
           if (user_access('access content')) {
             switch (variable_get('forward_block_type', 'allTime')) {
-              /*case 'today':
-                $pastday = time()-(24 * 60 * 60);
-                $query="SELECT n.nid, n.title, count(*) AS cnt FROM {forward_log} s LEFT JOIN {node} n ON s.nid = n.nid WHERE s.type='sent' AND n.status=1 AND timestamp > ". $pastday .' GROUP BY n.nid, n.title ORDER BY cnt DESC';
-                $block['subject'] = t("Today's Most Emailed");
-                $block['content'] = node_title_list(db_query_range($query, 0, 5));
-                break;
-              case 'week':
-                $pastweek = time()-(7 * 24 * 60 * 60);
-                $query="SELECT n.nid, n.title, count(*) AS cnt FROM {forward_log} s LEFT JOIN {node} n ON s.nid = n.nid WHERE s.type='sent' AND n.status=1 AND timestamp > ". $pastweek .' GROUP BY n.nid, n.title ORDER BY cnt DESC';
-                $block['subject'] = t("This Week's Most Emailed");
-                $block['content'] = node_title_list(db_query_range($query, 0, 5));
-                break;*/
               case 'allTime':
                 $query="SELECT n.nid, n.title, f.* FROM {forward_statistics} f LEFT JOIN {node} n ON f.nid = n.nid WHERE forward_count > 0 ORDER BY f.forward_count DESC";
                 $block['subject'] = t("Most Emailed");

@@ -5,11 +5,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Test_09_CMS_FAQ_workflow_input.rb'
 require 'InputRepository/Config.rb'
 require 'lib/NIC_Lib.rb'
@@ -31,8 +31,9 @@ describe "CMS FAQ workflow (Creation/Approval/Publishing)" do
   it "Validation check for Question of the FAQ" do
 
         @browser1.goto("#{$Site_URL}node/add/faq")
-        @browser1.frame(:title => 'Rich Text AreaPress ALT-F10 for toolbar. Press ALT-0 for help').send_keys "#{$body}"
-        $aud_path = $aud_path.gsub("/", "\\")
+        #@browser1.frame(:title => 'Rich Text AreaPress ALT-F10 for toolbar. Press ALT-0 for help').send_keys "#{$body}"
+        @browser1.textarea(:id, "edit-body").set($body)
+	$aud_path = $aud_path.gsub("/", "\\")
         puts $aud_path
         $vid_path = $vid_path.gsub("/", "\\")
         puts $vid_path
@@ -49,7 +50,7 @@ describe "CMS FAQ workflow (Creation/Approval/Publishing)" do
         @browser1.text_field(:id,"edit-field-expiry-date-0-value-datepicker-popup-0").set($date)
         @browser1.browser.text_field(:id, "edit-field-no-ofdays-0-value").set($days)
         sleep 2
-        @browser1.button(:value,"Save").click
+        @browser1.button(:value,"Submit").click
         sleep 2
         @browser1.text.should include('Question field is required')
         puts "Validation completed"
@@ -66,13 +67,13 @@ describe "CMS FAQ workflow (Creation/Approval/Publishing)" do
       puts $quest_title
       @browser1.text_field(:id, "edit-title").set($quest_title)
       @browser1.browser.button(:value,"Preview").click
-      @browser1.text.should include("Preview")
+ #     @browser1.text.should include("Preview")
       @browser1.text.should include($quest_title)
       puts "Preview completed"
    end
 
    it "Save FAQ" do
-      @browser1.button(:value,"Save").click
+      @browser1.button(:value,"Submit").click
       sleep 2
       @browser1.text.should include("FAQ #{$quest_title} has been created")
       puts "Save completed"
@@ -93,11 +94,13 @@ describe "CMS FAQ workflow (Creation/Approval/Publishing)" do
       puts $node_val
 
       #@browser1.text_field(:id, "edit-field-instructions-0-value").set($revised_inst)
-      @browser1.frame(:title => 'Rich Text AreaPress ALT-F10 for toolbar. Press ALT-0 for help').send_keys ""
+      #@browser1.frame(:title => 'Rich Text AreaPress ALT-F10 for toolbar. Press ALT-0 for help').send_keys ""
+      @browser1.textarea(:id, "edit-body").set("")
       sleep 1
-      @browser1.frame(:title => 'Rich Text AreaPress ALT-F10 for toolbar. Press ALT-0 for help').send_keys "#{$revised_body}"
-      @browser1.button(:value,"Save").click
-      sleep 5
+      #@browser1.frame(:title => 'Rich Text AreaPress ALT-F10 for toolbar. Press ALT-0 for help').send_keys "#{$revised_body}"
+      @browser1.textarea(:id, "edit-body").set($revised_body)
+      @browser1.button(:value,"Submit").click
+      sleep 8
       @browser1.text.should include("#{$revised_body}")
       @browser1.text.should include("FAQ #{$quest_title} has been updated")
       puts "Edit completed"
@@ -366,6 +369,8 @@ describe "CMS FAQ workflow (Creation/Approval/Publishing)" do
       @browser.close
       puts "Verify FAQ on frontend completed"
   end
+  
+  
 =begin
   it "Delete FAQ" do
       @browser4.refresh

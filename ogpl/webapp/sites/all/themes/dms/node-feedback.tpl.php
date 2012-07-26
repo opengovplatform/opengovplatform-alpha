@@ -29,12 +29,13 @@ $notes_url = request_uri();
     });
 </script>
 <?php
-if(strpos($notes_url, '/type/note')) {
+if(strpos($notes_url, '/type/note') || strpos($notes_url, '/comment/reply')) {
     ?>
 <style>
 .node-type-feedback.node.full-node .inner{display:none;}
 #comments,#comment-form{display:block;}
 #comment-form .resizable-textarea{width: 99.75%;}
+h2.title{display:none;}
 </style>
 <script>
     $(document).ready(function() {
@@ -44,6 +45,7 @@ if(strpos($notes_url, '/type/note')) {
         $("#content-tabs-inner .primary li:first-child").removeClass("active");
         $("#content-tabs-inner .primary li:eq(1)").addClass("active");
         $("#content-tabs-inner .primary li:eq(1) a").addClass("active");
+		$("h1.title").html("Notes");
     });
 </script>
 <?php
@@ -77,7 +79,9 @@ if(strpos($notes_url, '/type/note')) {
             <?php
             global $user;
             if ($user->uid && $node->type == "feedback") { ?>
-                <a href="<?php print $base_url; ?>/print/<?php print $node->nid; ?>" target="_blank"><img src="<?php print $base_url; ?>/sites/all/themes/dms/printer_icon.png" width="20px" height="30px" title="Print" /></a>
+                  <?php $url=$base_url.'/print/'.$node->nid; ?>
+                <iframe style="display:none;" name="printable-content" id="printable-content"></iframe>			 
+                <img src="<?php print $base_url; ?>/sites/all/themes/dms/printer_icon.png" width="20px" height="30px" title="Print" onclick="feedback_print('<?php print $url; ?>');" />
                 <?php } ?>
             <!--a href="#notes" onclick="showNotes(<?php print $node->nid ?>);">Notes</a-->
         </div>
@@ -130,9 +134,13 @@ if(strpos($notes_url, '/type/note')) {
     <?php endif; ?>
 
 </div><!-- /node-<?php print $node->nid; ?> -->
+<?php
+if(!strpos($notes_url, '/comment/reply')) {
+?>
 <div class="feedback-comment">
     <?php
     module_load_include('inc', 'comment','comment.admin');
     print drupal_get_form('comment_form', array('nid' => $node->nid));
     ?>
 </div>
+<?php } ?>

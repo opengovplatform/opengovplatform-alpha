@@ -15,6 +15,17 @@ function cms_views_ctools_plugin_api() {
  */
 function cms_views_node_info() {
   $items = array(
+    'block' => array(
+      'name' => t('Block'),
+      'module' => 'features',
+      'description' => t('This Content Type enables Admin to create configurable blocks.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '1',
+      'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
+    ),
     'page' => array(
       'name' => t('Page'),
       'module' => 'features',

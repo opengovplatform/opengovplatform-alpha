@@ -1,0 +1,12 @@
+name = "CAPTCHA After"
+description = "Show CAPTCHA After X Unsuccessful Submit Attempts."
+core = 6.x
+package = Spam control
+dependencies[] = captcha
+
+; Information added by drupal.org packaging script on 2011-06-30
+version = "6.x-1.2"
+core = "6.x"
+project = "captcha_after"
+datestamp = "1309445214"
+

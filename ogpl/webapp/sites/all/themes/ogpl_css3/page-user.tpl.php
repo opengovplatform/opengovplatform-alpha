@@ -1,5 +1,4 @@
 <?php global $base_url, $site_name;
-if($base_url == "http://demodata.nic.in") { header("location: http://demodata.nic.in"); exit; }
 if(!empty($_GET['iprestricted'])){
 	$show_messages = true;
 	$messages = "<div class=\"messages error\">Your IP:".$_SERVER['REMOTE_ADDR']." is restricted for Super Admin Login</div>";
@@ -25,7 +24,7 @@ if(!empty($_GET['iprestricted'])){
   @import "<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/multistep.css?i";
 
   </style>
-  <title><?php print $head_title; ?></title>
+  <title>User Login | <?php echo variable_get('site_name', array()); ?></title>
   <?php print $head; ?>
   <link href="<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/dms-style.css" rel="alternate stylesheet" type="text/css" />
   <link href="<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/multistep.css" rel="alternate stylesheet" type="text/css" />

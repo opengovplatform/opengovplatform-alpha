@@ -1,0 +1,6 @@
+
+.encrypt-submissions-status {
+  background: transparent url("images/throbber.gif") no-repeat scroll left center;
+  padding-left: 20px;
+  display: none;
+}

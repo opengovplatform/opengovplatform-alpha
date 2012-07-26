@@ -1,1 +1,141 @@
-<?phpfunction misc_system_settings_form_submit($form_id, $form_values) {    // Handle saving of custom data here	// variable_set('super_admin_ip', $form_values['values']['super_admin_ip']);    // variable_set('google_map_key', $form_values['values']['google_map_key']);}function web_site_config_form_alter(&$form, $form_state, $form_id) {	global $user;		if ($form_id == 'system_site_information_settings') {      /*$header_data = db_query("SELECT node.nid AS nid,  node.title AS node_title FROM node node LEFT JOIN workflow_node workflow_node ON node.nid = workflow_node.nid WHERE (node.type in ('flags')) AND (workflow_node.sid = 19) ORDER BY node_title ASC");*/      $header_data = views_get_view_result('open_data_sites_country_list');      $header_list = array();      $header_list[''] = 'Select';      /*while ($row = db_fetch_object($header_data)){          $header_list[$row->nid] = $row->node_title;      }*/      foreach($header_data as $row){          $header_list[$row->nid] = $row->node_title;      }	  	if(in_array('Administrator', $user->roles)){		$form['super_admin_ip'] = array(		  '#type' => 'textarea',		  '#title' => t('Super Admin Access IPs'),         		  '#default_value' => variable_get('super_admin_ip', ''),		  '#description' => t("Enter the IP Address from which Super admin will be allowed to login. Please separate each IP Address by a new line. Your current IP Address:<b>".$_SERVER['REMOTE_ADDR']."</b>"),		);				$form['admin_pages_list'] = array(		  '#type' => 'textarea',		  '#title' => t('Pages Accessible By Admin'),         		  '#default_value' => variable_get('admin_pages_list', ''),		  '#description' => t("Enter the pages which will be accessible only to admin.Please enter the path on new line"),		);		$form['host_ip_config'] = array(		  '#type' => 'select',		  '#title' => t('Host IP configuration'),		  '#options' => array('web_service'=> "Web service",'local_db'=> "Local DB"),		  '#default_value' =>  variable_get('host_ip_config', ''),		  '#description' => t("Configure your HostIP application as a web service or join it with local database."),		  '#attributes' => array('onChange' => 'show_para_hostip_para(this.value)'),		);				$form['webservice_url'] = array(          '#type' => 'textfield',          '#title' => t('Webservice URL'),		  '#default_value' => variable_get('webservice_url', ''),		  '#description' => t("Web service URL for fetching the IP2location data"),		);		  		$form['hostip_database_name'] = array(		  '#type' => 'textfield',		  '#title' => t('Host IP database name'),		  '#default_value' => variable_get('hostip_database_name', ''),		);				$form['#validate'][] = 'validate_site_conf_form';		$form['#submit'][] = 'misc_system_settings_form_submit';	}	  	$form['site_country'] = array(	  '#type' => 'select',	  '#title' => t('Select the Country'),	  '#options' => $header_list,	  '#default_value' => variable_get('site_country', ''),	  '#description' => t("Selected countries Site flag and government name will be shown on the site."),	);	$form['google_map_key'] = array(	  '#type' => 'textfield',	  '#title' => t('Google Map API Key'),	  '#default_value' => variable_get('google_map_key', ''),	);	  }}function validate_site_conf_form(&$form, &$form_state){	if($form['#post']['host_ip_config']==1 && !valid_url($form['#post']['webservice_url'],true)){		form_set_error('webservice_url', t('Incorrect webservice URL'));	}		if(!isset($_SESSION['show_ip_warning'])){		$site_var = $form['#post']['super_admin_ip'];		if(trim($site_var) != ""){			$ipLIST = explode("\r\n",$site_var);			if(!in_array($_SERVER['REMOTE_ADDR'],$ipLIST)){				form_set_error('super_admin_ip',"");				drupal_set_message(t('Your current IP address: @ip_adress is not being listed in the \'Super Admin Access IPs\' field. You will be logged out immediately after you save the configurations.', array('@ip_adress' => $_SERVER['REMOTE_ADDR'])),'warning');				$_SESSION['show_ip_warning'] = true;			}			}	}else{		unset($_SESSION['show_ip_warning']);	}	}?>
+<?php
+
+function web_site_config_form_alter(&$form, $form_state, $form_id) {
+  global $user;
+  if ($form_id == 'system_site_information_settings') {
+
+    $header_data = views_get_view_result('open_data_sites_country_list');
+    $header_list = array('' => 'Select');
+    foreach ($header_data as $row) {
+      $header_list[$row->nid] = $row->node_title;
+    }
+
+    $form['cron_safe_threshold']['#weight'] = '7';
+
+    $form['site_slogan'] = array(
+      '#title' => 'Country Name',
+      '#description' => 'This country name will appear in certain pages on the site',
+      '#weight' => '1',
+    );
+
+    $form['site_country'] = array(
+      '#type' => 'select',
+      '#title' => t('Select the Country'),
+      '#options' => $header_list,
+      '#default_value' => variable_get('site_country', ''),
+      '#description' => t("Selected countries Site flag and government name will be shown on the site."),
+    );
+
+    $form['google_map_key'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Google Map API Key'),
+      '#default_value' => variable_get('google_map_key', ''),
+      '#weight' => '15',
+    );
+
+    if (in_array('Administrator', $user->roles)) {
+      $form['super_admin_ip'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Super Admin Access IPs'),
+        '#default_value' => variable_get('super_admin_ip', ''),
+        '#description' => t("Enter the IP Address from which Super admin will be allowed to login. Please separate each IP Address by a new line. Your current IP Address:<b>" . $_SERVER['REMOTE_ADDR'] . "</b>"),
+      );
+
+      $form['admin_pages_list'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Pages Accessible By Admin'),
+        '#default_value' => variable_get('admin_pages_list', ''),
+        '#description' => t("Enter the pages which will be accessible only to admin.Please enter the path on new line"),
+      );
+
+      $form['host_ip_config'] = array(
+        '#type' => 'select',
+        '#title' => t('Host IP configuration'),
+        '#options' => array('web_service' => "Web service", 'local_db' => "Local DB"),
+        '#default_value' => variable_get('host_ip_config', ''),
+        '#description' => t("Configure your HostIP application as a web service or join it with local database."),
+        '#attributes' => array('onChange' => 'show_para_hostip_para(this.value)'),
+      );
+
+      $form['webservice_url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Webservice URL'),
+        '#default_value' => variable_get('webservice_url', ''),
+        '#description' => t("Web service URL for fetching the IP2location data"),
+      );
+
+      $form['hostip_database_name'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Host IP database name'),
+        '#default_value' => variable_get('hostip_database_name', ''),
+      );
+
+      $form['domain_names'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Domain Name For Admin And Front-End'),
+        '#description' => t('You can set the domain name for the admin site and the front-end if you have two different domain names.'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+      );
+
+      $form['domain_names']['admin_url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Admin URL'),
+        '#default_value' => variable_get('admin_url', ''),
+        '#description' => t("Enter the domain name for the admin login.eg:http://example.com"),
+
+      );
+
+      $form['domain_names'] ['frontend_url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Front-End Url'),
+        '#default_value' => variable_get('frontend_url', ''),
+        '#description' => t("Enter the domain name for the front-end.eg:http://example.com"),
+      );
+
+      $form['#validate'][] = 'validate_site_conf_form';
+      $form['#submit'][] = 'misc_system_settings_form_submit';
+    }
+  }
+}
+
+function validate_site_conf_form(&$form, &$form_state) {
+  if ($form['#post']['host_ip_config'] == 1 && !valid_url($form['#post']['webservice_url'], TRUE)) {
+    form_set_error('webservice_url', t('Incorrect webservice URL'));
+  }
+
+  if (!isset($_SESSION['show_ip_warning'])) {
+    $site_var = $form['#post']['super_admin_ip'];
+    if (trim($site_var) != "") {
+      $ipLIST = explode("\r\n", $site_var);
+      if (!in_array($_SERVER['REMOTE_ADDR'], $ipLIST)) {
+        form_set_error('super_admin_ip', "");
+        drupal_set_message(t('Your current IP address: @ip_adress is not being listed in the \'Super Admin Access IPs\' field. You will be logged out immediately after you save the configurations.', array('@ip_adress' => $_SERVER['REMOTE_ADDR'])), 'warning');
+        $_SESSION['show_ip_warning'] = TRUE;
+      }
+    }
+  }
+  else {
+    unset($_SESSION['show_ip_warning']);
+  }
+}
+
+function web_site_config_init() {
+  global $base_url, $user;
+  $admin_url = variable_get('admin_url', '');
+  $frontend_url = variable_get('frontend_url', '');
+  $is_admin_url = in_array(arg(0), array("user", "admin"));
+
+  if (in_array(arg(0), array('encrypt-submissions', 'image_captcha')) or empty($admin_url) or empty($frontend_url)) {
+    return;
+  }
+
+  if ($base_url == $admin_url && !$is_admin_url && $user->roles[1] == 'anonymous user') {
+    drupal_goto("user");
+  }
+
+  if ($base_url == $frontend_url && $is_admin_url) {
+    drupal_goto('<front>');
+  }
+}
+

@@ -797,8 +797,7 @@ return theme(\'fivestar_static\', $value) . \' (\' . $data->votingapi_cache_node
     ),
   ));
   $handler->override_option('title', 'Suggested Datasets');
-  $handler->override_option('empty', 'No suggested datasets exists!');
-  $handler->override_option('empty_format', '1');
+  $handler->override_option('empty', '<p>No suggested datasets exists!</p>');
   $handler->override_option('path', 'suggested_datasets');
   $handler->override_option('menu', array(
     'type' => 'none',
@@ -1174,8 +1173,7 @@ return theme(\'fivestar_static\', $value) . \' (\' . $data->votingapi_cache_node
     ),
   ));
   $handler->override_option('title', 'Suggested Apps');
-  $handler->override_option('empty', 'No Suggested Apps exist!');
-  $handler->override_option('empty_format', '1');
+  $handler->override_option('empty', '<p>No Suggested Apps exist!</p>');
   $handler->override_option('path', 'suggested_apps');
   $handler->override_option('menu', array(
     'type' => 'none',
@@ -1256,6 +1254,9 @@ return theme(\'fivestar_static\', $value) . \' (\' . $data->votingapi_cache_node
       'table' => 'node',
       'field' => 'nid',
       'relationship' => 'none',
+      'override' => array(
+        'button' => 'Use default',
+      ),
     ),
     'teaser' => array(
       'label' => 'Suggestion',

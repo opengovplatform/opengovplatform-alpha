@@ -25,22 +25,7 @@
 <?php if (!empty($print['message'])) {
     print '<div class="print-message">'. $print['message'] .'</div><p />';
 } ?>
-<script>
-    $(document).ready(function() {
-        $(".print-feedback").remove();
-        $("#comment-form").remove();
-        $(".terms").remove();
-        var print_content = "<html><body style='margin:10px; padding:10px;'>";
-        var div_content = $("#print-feedback-content").html();
-        print_content+=div_content+"</body></html>";
-        var printWin = window.open('','_self','toolbar=0,scrollbars=yes,width=auto,height=auto');
-        printWin.document.write(print_content);
-        printWin.document.close();
-        printWin.focus();
-        printWin.print();
-        printWin.close();
-    });
-</script>
+
 <div class="print-logo"><?php print $print['logo']; ?></div>
 <p />
 <hr class="print-hr" />

@@ -1,3 +1,5 @@
+; $Id$
 name = Web Download Count
 description = A module to store download count for access point.
 core = 6.x
+package = OGPL

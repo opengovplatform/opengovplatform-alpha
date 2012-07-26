@@ -1,3 +1,0 @@
-<?php
-
-include_once('vrm_feedback_reply.features.inc');

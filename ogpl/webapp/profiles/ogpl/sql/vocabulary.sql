@@ -1,1 +1,0 @@
-INSERT IGNORE INTO `vocabulary` VALUES (1,'Action Status','','',1,1,0,0,0,'features_action_status',0),(2,'Feedback Category','','',1,1,1,0,0,'features_feedback_category',0),(3,'Feedback Source','','',1,1,0,0,0,'features_feedback_source',0),(4,'Feedback Type','','',1,1,1,1,0,'features_feedback_type',0),(5,'VRM workflow states','','',1,1,0,0,0,'taxonomy',0);

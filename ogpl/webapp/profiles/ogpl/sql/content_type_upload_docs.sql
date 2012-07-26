@@ -1,1 +1,0 @@
-INSERT IGNORE INTO `content_type_upload_docs` VALUES (550,181,32,1,NULL,'<p>OpenGov Platform metadata schema, version 3.02.&nbsp;</p><p>This document is still in draft.</p>',1),(551,182,86,1,NULL,'<p>This document lists functional requirements for the Data Management System of OpenGov Platform. &nbsp;Draft version 0.3a.</p>',1);

@@ -53,6 +53,7 @@
   <div class="add-this-options">
 <?php if(empty($_GET['embed'])&& empty($_GET['print'])){ ?>
     <div class="anchor-links fLeft">	
+	    <div class="fLeft"><a href="#tabs-block" rel="discuss" title="Discuss this dataset">Discuss this dataset</a></div>
 		<div class="fLeft"><a href="#tabs-block" rel="contactOwner" title="Contact Dataset Owner">Contact Dataset Owner</a></div>
 		<div class="fLeft"><a href="#tabs-block" rel="ratings" title="Rate this dataset">Rate this dataset</a></div>
 		<div class="fLeft"><a href="#tabs-block" rel="embed" title="Embed this dataset">Embed this dataset</a></div>
@@ -112,10 +113,11 @@
 	<?php if(empty($_GET['embed'])&& empty($_GET['print'])){ ?>
 	<div id="tabs-block" class="js-disable-hide">
 		<ul class="list">
-			<li class="contactOwner active" title="Contact Dataset Owner">Contact Dataset Owner</li>
+		    <li class="discuss active" title="Discuss this dataset">Discuss</li>	
+			<li class="contactOwner" title="Contact Dataset Owner">Contact Dataset Owner</li>
 			<li class="ratings" title="Rate this dataset">Ratings</li>
-			<li class="embed" title="Embed this dataset">Embed</li>						
-		</ul>	
+			<li class="embed" title="Embed this dataset">Embed</li>		
+        </ul>	
 	</div>
     <?php } ?>
 	</div>
@@ -124,6 +126,7 @@
     <?php if(empty($_GET['embed'])&& empty($_GET['print'])){ ?>
 	<div class="messages error clientside contactOwnerError" id="web-contact-owner-form-errors" style="display: none;"><ul><li style="display:none">No Errors</li></ul></div>
 	<div class="messages error clientside ratingsError" id="ratings-form-errors" style="display: none;"><ul><li style="display:none">No Errors</li></ul></div>
+	<div class="messages error clientside commentsError" id="comment-form-errors" style="display: none;"><ul><li style="display:none">No Errors</li></ul></div>
 	<div class="js-disable-show">Embed</div>
     <form name="embed-form" action="<?php echo $base_url.'/'?>embed_preview" method="post" target="_new">
     <div class="tabs-cont embed-block">

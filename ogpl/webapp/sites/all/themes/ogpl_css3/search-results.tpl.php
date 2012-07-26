@@ -562,7 +562,7 @@ print '<div class="heading">'.$GLOBALS['pager_total_items'][0].' Search Results<
 		<script type="text/javascript">
 			$("#block-apachesolr-sort .item-list li:first").hide();
 		</script>
-		<?
+		<?php
 	}
   ?>
 

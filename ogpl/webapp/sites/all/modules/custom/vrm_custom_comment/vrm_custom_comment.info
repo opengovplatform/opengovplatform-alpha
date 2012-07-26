@@ -1,5 +1,0 @@
-; $Id: custom_comment.info,2012/01/08 09:44:00 Added for NIC $
-name = "Vrm Custom Comment"
-description = "Displays the number of charcters remaining"
-package = "Other"
-core = 6.x

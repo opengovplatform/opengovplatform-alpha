@@ -4,10 +4,10 @@ require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
 require 'win32ole'
-require 'Win32API'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Config.rb'
 #include 'Suite'
 #PRE REQUISITES :-
@@ -21,16 +21,18 @@ describe "Parse downloaded metrics files" do
   end
 
   it "To Parse CSV file" do
-      #puts Dir.pwd
-      $fl_nm = "#{Dir.pwd}/Downloads/"
-      #puts $fl_nm
-      $fl_nm = $fl_nm.gsub("/", "\\")
-      #puts $fl_nm
-      $contains = Dir.new($fl_nm).entries
-      #p $contains
-      $fl_csv = $contains[4].to_s
-      $fl_csv = $fl_nm + $fl_csv
-      puts $fl_csv
+	puts "To parse CSV file"
+	#puts Dir.pwd
+	$fl_nm = "#{Dir.pwd}/Downloads/"
+	#puts $fl_nm
+	$fl_nm = $fl_nm.gsub("/", "\\")
+	#puts $fl_nm
+	$contains = Dir.new($fl_nm).entries
+	p $contains
+	$fl_csv = $contains[3].to_s
+	p $fl_csv
+	$fl_csv = $fl_nm + $fl_csv
+	p $fl_csv
 
       excel= WIN32OLE::new('excel.Application')
       workbook=excel.Workbooks.Open("#{$fl_csv}")
@@ -54,14 +56,17 @@ describe "Parse downloaded metrics files" do
   end
 
   it "To parse EXCEL file" do
-      #puts Dir.pwd
+      puts "To parse EXCEL file"
+	  #puts Dir.pwd
       $fl_nm = "#{Dir.pwd}/Downloads/"
       #puts $fl_nm
       $fl_nm = $fl_nm.gsub("/", "\\")
       #puts $fl_nm
       $contains = Dir.new($fl_nm).entries
-      #p $contains
-      $fl_csv = $contains[5].to_s
+      p $contains
+      $fl_csv = $contains[4].to_s
+	  puts "EXCEL"
+	  puts $fl_csv
       $fl_csv = $fl_nm + $fl_csv
       puts $fl_csv
 

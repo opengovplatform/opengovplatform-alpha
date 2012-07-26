@@ -5,11 +5,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 #require 'InputRepository/Test_20_CMS_Block_workflow_input.rb'
 require 'InputRepository/Config.rb'
 require 'lib/NIC_Lib.rb'

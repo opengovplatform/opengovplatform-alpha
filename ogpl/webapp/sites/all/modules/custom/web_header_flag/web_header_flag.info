@@ -1,0 +1,5 @@
+; $Id$
+name = Web Header Flag
+description = This module is used to display Header Flag image and Union Government Name for the site
+core = 6.x
+package = OGPL

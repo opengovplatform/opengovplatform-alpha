@@ -13,7 +13,7 @@ if ($node->type == "feedback" && (strpos($notes_url, '/print/') === FALSE)) {
     }
     ?>
 <tr class="<?php print $comment_classes;?>">
-    <td><?php print nl2br($content) ?></td>
+    <td><?php print filter_xss(nl2br($content)) ?></td>
     <td><?php echo $username; ?></td>
     <td><?php print $date ?></td>
 </tr>

@@ -85,7 +85,7 @@ function print_pdf_menu() {
   $items = array();
 
   $items[PRINTPDF_PATH] = array(
-    'title' => 'Printer-friendly PDF',
+    'title' => '',
     'page callback' => 'print_pdf_controller',
     'access arguments' => array('access PDF version'),
     'type' => MENU_CALLBACK,

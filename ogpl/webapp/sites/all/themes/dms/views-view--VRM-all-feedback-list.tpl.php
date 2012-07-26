@@ -29,15 +29,13 @@
  */
 ?>
 <?php
-drupal_add_js('sites/all/modules/contrib/date/date_popup/lib/jquery.timeentry.pack.js');
-drupal_add_js('sites/all/libraries/jquery.ui/ui/minified/ui.datepicker.min.js');
-drupal_add_js('sites/all/modules/contrib/date/date_popup/date_popup.js');
-
+drupal_add_js(libraries_get_path('jquery.ui') . '/ui/minified/ui.datepicker.min.js');
+drupal_add_js(drupal_get_path('module', 'date_popup') . '/lib/jquery.timeentry.pack.js');
+drupal_add_js(drupal_get_path('module', 'date_popup') . '/date_popup.js');
+drupal_add_css(drupal_get_path('module', 'date_popup') . '/themes/datepicker.css');
+drupal_add_css(drupal_get_path('module', 'datepopup') . '/themes/jquery.timeentry.css');
+drupal_add_css(drupal_get_path('module', 'date') . '/date.css');
 ?>
-
-<link type="text/css" href="sites/all/modules/contrib/date/date.css" rel="Stylesheet" />	
-<link type="text/css" href="sites/all/modules/contrib/date/date_popup/themes/datepicker.css" rel="Stylesheet" />	
-<link type="text/css" href="sites/all/modules/contrib/date/date_popup/themes/jquery.timeentry.css" rel="Stylesheet" />	
 
 <div class="<?php print $classes; ?>">
   <?php if ($admin_links): ?>
@@ -109,9 +107,49 @@ $(document).ready(function()
 $(".<?php echo $view_name; ?> form input#edit-date-filter-min-date").attr('id', 'min-date-<?php echo $display_name; ?>');
 $(".<?php echo $view_name; ?> form input#edit-date-filter-max-date").attr('id', 'max-date-<?php echo $display_name; ?>');
 
-$("#min-date-<?php echo $display_name; ?>").val(("<?= date("Y-m-d",strtotime('-31 days')) ?>"));
-$("#max-date-<?php echo $display_name; ?>").val(("<?= date("Y-m-d" ) ?>"));
+$("#min-date-<?php echo $display_name; ?>").val(("<?php echo date('Y-m-d',strtotime('-31 days')); ?>"));
+$("#max-date-<?php echo $display_name; ?>").val(("<?php echo date('Y-m-d' ); ?>"));
 $("#min-date-<?php echo $display_name; ?>").datepicker({ dateFormat: 'yy-mm-dd' });
 $("#max-date-<?php echo $display_name; ?>").datepicker({ dateFormat: 'yy-mm-dd' });
+
+$("#min-date-<?php echo $display_name; ?>,#max-date-<?php echo $display_name; ?>").change(function(){
+	var getDate = function(dateStr) {
+		var matches = /^(\d{4})[-\/](\d{2})[-\/](\d{2})$/.exec(dateStr);
+		//alert(matches);
+        if (matches == null) return new Date(1971,1,1);
+        var d = matches[3];
+        var m = matches[2] - 1;
+        var y = matches[1];
+        return new Date(y, m, d);
+      };
+
+      var isValid = function (date, dateStr) {
+        if (date == 'yyyy-mm-dd') return false;
+		//alert(dateStr);
+        var composedDate = getDate(dateStr);
+        return composedDate.getFullYear() + '-' + (composedDate.getMonth()+1).zeroFill(2) + '-' + composedDate.getDate().zeroFill(2) == dateStr;
+      };
+
+	Number.prototype.zeroFill = function (width) {
+		var fillZeroes = "00000000000000000000";  // max number of zero fill ever asked for in global
+		var input = this + "";  // make sure it's a string
+		return(fillZeroes.slice(0, width - input.length) + input);
+}
+
+      var messages = '';
+      if (!isValid(getDate($("#max-date-<?php echo $display_name; ?>").val()), $("#max-date-<?php echo $display_name; ?>").val())) {
+        messages += "To date is invalid\n";
+      }
+      if (!isValid(getDate($("#min-date-<?php echo $display_name; ?>").val()), $("#min-date-<?php echo $display_name; ?>").val())) {
+        messages += "From date is invalid\n";
+      }
+      if(getDate($("#min-date-<?php echo $display_name; ?>").val()) > getDate($("#max-date-<?php echo $display_name; ?>").val())){
+        messages += "From date greater than To date\n";
+      }
+      if(messages != '') {
+        alert(messages);
+        return false;
+      }
+    });
 });
 </script>

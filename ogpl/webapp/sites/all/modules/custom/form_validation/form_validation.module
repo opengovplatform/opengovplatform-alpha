@@ -1,0 +1,100 @@
+<?php
+/*
+ * Implementation of hook_form_alter()
+*
+*/
+function form_validation_form_alter(&$form, $form_state, $form_id) {
+  $form['#validate'][] = 'cck_form_validate';
+  return $form;
+}
+
+function cck_form_validate($form, &$form_state) {
+  $blacklist = array(
+    'menu',
+    'date',
+    'body',
+    'op',
+    'textsize_element_class',
+    'fld_title',
+    'clientside_validation_path_list'
+  );
+  $whitelist = array('title', 'name', 'recipients', 'mail', 'comment');
+
+  $to_be_checked = $form_state['clicked_button']['#post'];
+  if ($form['form_id']['#value'] == 'webform_client_form_101') {
+    $to_be_checked = $to_be_checked['submitted'];
+  }
+  foreach ($to_be_checked as $key => $value) {
+    if (in_array($key, $blacklist) or (!substr($key, 0, 6) == 'field_' and !in_array($key, $whitelist))) {
+      continue;
+    }
+    $result = $value;
+    //this has been done twice because of cck fields which have the format $field[0]['value']
+    //there also seems to be some mystery field that has a single key. hence the two individual statements are required.
+    if (is_array($result)) {
+      $result = current($result);
+    }
+    if (is_array($result)) {
+      $result = current($result);
+    }
+
+    if (_check_blacklist($result)) {
+      $title = $key;
+      if (isset($form[$key]['#title'])) {
+        $title = $form[$key]['#title'];
+      }
+      if (isset($form[$key][0]['value']['#title'])) {
+        $title = $form[$key][0]['value']['#title'];
+      }
+      if (isset($form['message'][$key])) { //web_tell_a_friend
+        $title = $form['message'][$key]['#title'];
+      }
+      form_set_error($key, t('Invalid character in @key', array('@key' => ucfirst($title))));
+    }
+  }
+}
+
+function _check_blacklist($str) {
+  $badch = array(
+    '>">',
+    '+',
+    '--',
+    '-->',
+    'DELETE',
+    '<',
+    '>',
+    '#',
+    "'",
+    '/*',
+    '<script>',
+    '<ScRiPt>',
+    '</ScRiPt>',
+    ';',
+    '"">',
+    'alert()+',
+    '>">',
+    '00"',
+    'img+src',
+    '/**/',
+    'javascript:alert()',
+    '<script>',
+    '</textarea>',
+    '<script/xss+src=',
+    '<iframe/+/onload',
+    '%',
+    "'>",
+    '=',
+    '"',
+    'onmouseover',
+    'alert()'
+  );
+  if (is_null($str) || trim($str) == "") {
+    return FALSE;
+  }
+  foreach ($badch as $bad) {
+    if (strpos($str, $bad) !== FALSE) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}

@@ -210,7 +210,7 @@ function dms_ds_upload_download_template($format = '') {
       $list_hash = md5(serialize($ready_list));
 
       //do we already have the xls file if same version?
-      $template_path = $_SERVER['DOCUMENT_ROOT'] . base_path() . file_directory_path() . '/dms_templates';
+      $template_path = file_directory_path() . '/dms_templates';
       $file_to_be = $template_path . '/dataset.template.' . $list_hash . '.xls';
 
       //if not yet, let us create the file.
@@ -355,7 +355,7 @@ function dms_ds_upload_download_nodes($node_ids = array(), $format = 'csv') {
       break;
 
     case 'xls':
-      $download_path = $_SERVER['DOCUMENT_ROOT'] . base_path() . file_directory_path() . '/dms_download';
+      $download_path = file_directory_path() . '/dms_download';
       $filepath = $download_path . '/' . $filename;
 
       //create dir first
@@ -474,6 +474,7 @@ function assocToXML($data_array, $tabCount=0) {
   }
 
   // parse the array for data and output xml
+  $xml_string = null;
   foreach ($data_array as $tag => $val) {
     if (!is_array($val)) {
       $xml_string .= $tabSpace . "<$tag>" . htmlentities($val) . "</$tag>" . PHP_EOL;

@@ -1,1 +1,0 @@
-INSERT IGNORE INTO `password_policy` VALUES (1,'Default','Default password policy.',1,'a:5:{s:11:\"punctuation\";s:1:\"1\";s:9:\"uppercase\";s:1:\"1\";s:6:\"length\";s:1:\"7\";s:10:\"complexity\";s:1:\"4\";s:7:\"history\";s:1:\"3\";}',1321741263,90,'14',0);

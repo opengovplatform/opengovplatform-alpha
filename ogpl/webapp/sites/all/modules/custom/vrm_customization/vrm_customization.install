@@ -7,89 +7,94 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function vrm_customization_install()
-{
-    drupal_install_schema('vrm_customization');
+function vrm_customization_install() {
+  $ret = array();
+  db_add_field($ret, 'term_data', 'is_contact_cat', array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => FALSE,
+    'default' => NULL,
+  ));
+  drupal_install_schema('vrm_customization');
 }
 
-function vrm_customization_uninstall()
-{
-    drupal_uninstall_schema('vrm_customization');
+function vrm_customization_uninstall() {
+  drupal_uninstall_schema('vrm_customization');
+
 }
 
-function vrm_customization_schema()
-{
-    $schema['vrm_admin_actions_log'] = array(
-        'description' => 'Stores data of all admin actions performed by the vrm admin.',
-        'fields' => array(
-            'id' => array(
-                'type' => 'serial',
-                'unsigned' => TRUE,
-                'not null' => TRUE,
-            ),
-            'vid' => array(
-                'type' => 'int',
-                'unsigned' => TRUE,
-                'not null' => FALSE,
-                'default' => 0
-            ),
-            'tid' => array(
-                'type' => 'int',
-                'unsigned' => TRUE,
-                'not null' => FALSE,
-                'default' => 0
-            ),
-            'term_name' => array(
-                'type' => 'varchar',
-                'length' => 255,
-                'not null' => FALSE,
-                'default' => null,
-            ),
-            'variable' => array(
-                'type' => 'varchar',
-                'length' => 255,
-                'not null' => FALSE,
-                'default' => null,
-            ),
-            'operation' => array(
-                'type' => 'varchar',
-                'length' => 255,
-                'not null' => FALSE,
-                'default' => '',
-            ),
-            'old_value' => array(
-                'type' => 'text',
-                'not null' => FALSE,
-                'size' => 'big',
-            ),
-            'new_value' => array(
-                'type' => 'text',
-                'not null' => FALSE,
-                'size' => 'big',
-            ),
-            'uid' => array(
-                'type' => 'int',
-                'unsigned' => TRUE,
-                'not null' => FALSE,
-                'default' => 0
-            ),
-            'timestamp' => array(
-                'type' => 'int',
-                'not null' => TRUE,
-                'default' => 0,
-            ),
-        ),
-        'primary key' => array('id'),
-    );
-    return $schema;
+function vrm_customization_schema() {
+  $schema['vrm_admin_actions_log'] = array(
+    'description' => 'Stores data of all admin actions performed by the vrm admin.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0
+      ),
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0
+      ),
+      'term_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'variable' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'operation' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'old_value' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'new_value' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
 }
 
 function vrm_customization_schema_alter(&$schema) {
   // Add field to existing schema.
   $schema['term_data']['fields']['is_contact_cat'] = array(
-    'type' => 'int', 
-	'size' => 'tiny',
-    'not null' => FALSE, 
-    'default' => NULL, 
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => FALSE,
+    'default' => NULL,
   );
 }

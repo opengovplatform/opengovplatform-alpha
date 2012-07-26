@@ -45,20 +45,11 @@ function getCompletePath() {
 }
 function itemsperpage(itemcount)
 {
-//alert( document.URL+'?itemcount='+itemcount );
-//alert(jQuery(location).attr('href'));
-//alert(getAbsolutePath()+'/downloadbycatagories'+'?itemcount='+itemcount);
 var selObj = document.getElementById('itemcount');
-//alert(document.getElementById(itemcount));
 $('#'+itemcount).attr('selected',true);
-//selObj.options[itemcount].selected=true;
-//if(window.location.href.indexOf('&')==-1)
 window.location=getAbsolutePath()+'downloadbyagency' +'?&itemcount='+itemcount;
-//else
-//window.location=getCompletePath()+'&itemcount='+itemcount ;
 }
 //--><!]]>
-
 </script>
 
 <div class="<?php print $classes; ?>">
@@ -67,11 +58,10 @@ window.location=getAbsolutePath()+'downloadbyagency' +'?&itemcount='+itemcount;
       <?php print $admin_links; ?>
     </div>
   <?php endif; ?>
- 
- <?php
+
+<?php
 global $base_url;
 $this_page = drupal_get_path_alias($_GET['q']);
-//echo $this_page;
 print '<div class="catalog-tabs-menu">';
   print '<ul class="catalog-tabs catalog-adjust">';
  if($this_page=='visitorstats/downloadbycategory')
@@ -91,7 +81,7 @@ print'</div>';
   <?php print $header; ?>
 </div>
 <?php endif; ?>
-<?
+<?php
 print'<div class="metrics-category-report-border">';
 print'<h1 class="view-header metrics-visitorstats-table-heading">';
 print'Downloads by Agency</h1>';
@@ -103,7 +93,6 @@ $selected_count=$_GET['itemcount'];
 
 
 print '<div style="display:none;" class="metrics-result-per-page-dropdown cBoth switch-js-enabled">';
-
 print '<label for="itemcount">Results per page: </label>';
 print '<select id="itemcount" name="itemcount" onchange="itemsperpage(this.options[this.options.selectedIndex].value);">';
 foreach($select_options as $key=>$value)
@@ -144,7 +133,7 @@ print '</div>';
     $view = views_get_current_view();
 	global $pager_total;
 	$total_pages = $pager_total['0'];
-	if(!$total_pages) 
+	if(!$total_pages)
 	$total_pages=1;
 	$pno=$_GET['page'];
 	$fpage=0;
@@ -207,5 +196,5 @@ print '</div>';
   <?php endif; ?>
 
 </div>
-</div> 
+</div>
 <?php /* class view */ ?>

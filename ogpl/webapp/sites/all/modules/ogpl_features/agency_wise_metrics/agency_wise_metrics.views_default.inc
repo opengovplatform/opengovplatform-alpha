@@ -1169,6 +1169,7 @@ if($result) return \'<h1>*</h1>\';
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 1,
       'value' => '<?php
 
 $avg_rating=variable_get(\'average_rating\',0);
@@ -1182,7 +1183,8 @@ $value=calculate_ratings($data->nid,$avg_rating,$avg_votes);
   $vote=$vote1[\'count\'];
   if($vote2[\'count\']>$vote) $vote=$vote2[\'count\'];
   if($vote3[\'count\']>$vote)$vote=$vote3[\'count\'];                 
-  		           
+  if($vote==1)   $votes=\'<span>(\'.$vote.\' vote)</span>\'; 
+else		           
   $votes=\'<span>(\'.$vote.\' votes)</span>\'; 
 return theme(\'fivestar_static\',$value).$votes;
 ?>',
@@ -1915,6 +1917,7 @@ else return \'No\';
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 1,
       'value' => '<?php
 
 $avg_rating=variable_get(\'average_rating\',0);
@@ -3338,6 +3341,7 @@ print \'<div style="font:bold 1.3em arial; padding-top:10px">No matching records
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '',
       'format' => '1',
       'exclude' => 0,
@@ -3371,6 +3375,7 @@ print \'<div style="font:bold 1.3em arial; padding-top:10px">No matching records
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '',
       'format' => '1',
       'exclude' => 0,
@@ -3404,6 +3409,7 @@ print \'<div style="font:bold 1.3em arial; padding-top:10px">No matching records
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_raw_data\')AND ds.field_ds_agency_name_nid =$data->nid AND  WF.sid=10"));
@@ -3445,6 +3451,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_document\')
@@ -3489,6 +3496,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_apps\')
@@ -3533,6 +3541,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_tools\')
@@ -3577,6 +3586,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_service\')
@@ -3621,6 +3631,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 
@@ -3663,6 +3674,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 global $base_url;
 $total=db_result(db_query("SELECT max(WF.stamp) FROM content_type_dataset ds INNER JOIN workflow_node WF On WF.nid=ds.nid   where ds.field_ds_agency_name_nid=$data->nid AND  ds.field_ds_catlog_type_type IS NOT NULL  AND WF.sid=10  "));
@@ -3695,7 +3707,7 @@ if($row->sub==null){ $sub_ag=\' IS NULL\' ;}
 
 else  {$sub_ag=" = $row->sub"; }
 
-$short_sub=db_result(db_query("SELECT  field_sa_subagency_short_name_value as sub FROM content_type_sub_agency sa where sa.field_sa_subagency_agency_nid=$data->nid  AND sa.nid $sub_ag "));	
+$short_sub=db_result(db_query("SELECT  field_sa_subagency_short_name_value as sub FROM content_type_sub_agency sa where sa.nid $sub_ag "));	
 
 if($short_sub!=\'\') $short_name=\' (\'.$short_sub.\')\'; else $short_name=\'\';
 
@@ -3837,6 +3849,8 @@ return $date.$sub_agency;
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
+  $handler->override_option('header_format', '3');
+  $handler->override_option('header_empty', 0);
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
     'grouping' => '',
@@ -4083,6 +4097,7 @@ return $default;
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_raw_data\')AND ds.field_ds_agency_name_nid =$data->nid AND  WF.sid=10 AND n.status=1"));
@@ -4091,7 +4106,8 @@ $val=db_result(db_query("SELECT count( DISTINCT ds.nid )  FROM  content_type_dat
 
 if($val)
 return $total.\' <span style="color:red;">(\'.$val.\')</span>\';
-else return $total
+else  return $total;
+
 ?>',
       'exclude' => 0,
       'id' => 'phpcode',
@@ -4127,6 +4143,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_document\')
@@ -4138,7 +4155,7 @@ $val=db_result(db_query("SELECT count( DISTINCT ds.nid )  FROM  content_type_dat
 
 if($val)
 return $total.\' <span style="color:red;">(\'.$val.\')</span>\';
-else return $total
+else return $total;
 ?>',
       'exclude' => 0,
       'id' => 'phpcode_1',
@@ -4174,6 +4191,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_apps\')
@@ -4185,7 +4203,7 @@ $val=db_result(db_query("SELECT count( DISTINCT ds.nid )  FROM  content_type_dat
 
 if($val)
 return $total.\' <span style="color:red;">(\'.$val.\')</span>\';
-else return $total
+else return $total;
 ?>',
       'exclude' => 0,
       'id' => 'phpcode_2',
@@ -4221,6 +4239,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid  WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_tools\')
@@ -4232,7 +4251,7 @@ $val=db_result(db_query("SELECT Count(*)  FROM  content_type_dataset ds INNER JO
 
 if($val)
 return $total.\'<span style="color:red;"> (\'.$val.\')</span>\';
-else return $total
+else return $total;
 ?>',
       'exclude' => 0,
       'id' => 'phpcode_3',
@@ -4268,6 +4287,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_service\')
@@ -4279,7 +4299,7 @@ $val=db_result(db_query("SELECT Count(*)  FROM  content_type_dataset ds INNER JO
 
 if($val)
 return $total.\'<span style="color:red;"> (\'.$val.\')</span>\';
-else return $total
+else return $total;
 ?>',
       'exclude' => 0,
       'id' => 'phpcode_6',
@@ -4315,6 +4335,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE ds.field_ds_agency_name_nid =$data->nid AND ds.field_ds_catlog_type_type IS NOT NULL AND WF.sid=10 AND n.status=1"));
@@ -4323,7 +4344,7 @@ $val=db_result(db_query("SELECT count( DISTINCT ds.nid )  FROM  content_type_dat
 
 if($val)
 return $total.\'<span style="color:red;"> (\'.$val.\')</span>\';
-else return $total
+else return $total;
 ?>',
       'exclude' => 0,
       'id' => 'phpcode_4',
@@ -4359,6 +4380,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 global $base_url;
 $total=db_result(db_query("SELECT max(WF.stamp) FROM content_type_dataset ds INNER JOIN workflow_node WF On WF.nid=ds.nid   where ds.field_ds_agency_name_nid=$data->nid AND  ds.field_ds_catlog_type_type IS NOT NULL  AND WF.sid=10  "));
@@ -4391,7 +4413,7 @@ if($row->sub==null){ $sub_ag=\' IS NULL\' ;}
 
 else  {$sub_ag=" = $row->sub"; }
 
-$short_sub=db_result(db_query("SELECT  field_sa_subagency_short_name_value as sub FROM content_type_sub_agency sa where sa.field_sa_subagency_agency_nid=$data->nid  AND sa.nid $sub_ag "));	
+$short_sub=db_result(db_query("SELECT  field_sa_subagency_short_name_value as sub FROM content_type_sub_agency sa where sa.nid $sub_ag "));	
 
 if($short_sub!=\'\') $short_name=\' (\'.$short_sub.\')\'; else $short_name=\'\';
 
@@ -4540,8 +4562,6 @@ print \'<div style="display:inline-block;"><p>OGPL offers a platform for governm
 
 ?>
 ');
-  $handler->override_option('header_format', '3');
-  $handler->override_option('header_empty', 0);
   $handler->override_option('items_per_page', 0);
   $handler->override_option('style_options', array(
     'grouping' => '',
@@ -4750,6 +4770,7 @@ print \'<div style="display:inline-block;"><p>OGPL offers a platform for governm
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '',
       'format' => '1',
       'exclude' => 0,
@@ -4786,6 +4807,7 @@ print \'<div style="display:inline-block;"><p>OGPL offers a platform for governm
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '',
       'format' => '1',
       'exclude' => 0,
@@ -4822,6 +4844,7 @@ print \'<div style="display:inline-block;"><p>OGPL offers a platform for governm
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_raw_data\')AND ds.field_ds_agency_name_nid =$data->nid AND  WF.sid=10 AND n.status=1"));
@@ -4866,6 +4889,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_document\')
@@ -4913,6 +4937,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_apps\')
@@ -4960,6 +4985,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid  WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_tools\')
@@ -5007,6 +5033,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_service\')
@@ -5054,6 +5081,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE ds.field_ds_agency_name_nid =$data->nid AND ds.field_ds_catlog_type_type IS NOT NULL AND WF.sid=10 AND n.status=1"));
@@ -5099,6 +5127,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 global $base_url;
 $total=db_result(db_query("SELECT max(WF.stamp) FROM content_type_dataset ds INNER JOIN workflow_node WF On WF.nid=ds.nid   where ds.field_ds_agency_name_nid=$data->nid AND  ds.field_ds_catlog_type_type IS NOT NULL  AND WF.sid=10  "));
@@ -5131,7 +5160,7 @@ if($row->sub==null){ $sub_ag=\' IS NULL\' ;}
 
 else  {$sub_ag=" = $row->sub"; }
 
-$short_sub=db_result(db_query("SELECT  field_sa_subagency_short_name_value as sub FROM content_type_sub_agency sa where sa.field_sa_subagency_agency_nid=$data->nid  AND sa.nid $sub_ag "));	
+$short_sub=db_result(db_query("SELECT  field_sa_subagency_short_name_value as sub FROM content_type_sub_agency sa where  sa.nid $sub_ag "));	
 
 if($short_sub!=\'\') $short_name=\' ,\'.$short_sub.\'\'; else $short_name=\',\';
 
@@ -5389,6 +5418,7 @@ return $date.$sub_agency;
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '',
       'format' => '1',
       'exclude' => 0,
@@ -5425,6 +5455,7 @@ return $date.$sub_agency;
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '',
       'format' => '1',
       'exclude' => 0,
@@ -5461,6 +5492,7 @@ return $date.$sub_agency;
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_raw_data\')AND ds.field_ds_agency_name_nid =$data->nid AND  WF.sid=10 AND n.status=1"));
@@ -5469,7 +5501,7 @@ $val=db_result(db_query("SELECT count( DISTINCT ds.nid )  FROM  content_type_dat
 
 if($val)
 return $total.\' <span style="color:red;">(\'.$val.\')</span>\';
-else return $total
+else return $total;
 ?>',
       'exclude' => 0,
       'id' => 'phpcode',
@@ -5505,6 +5537,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_document\')
@@ -5552,6 +5585,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_apps\')
@@ -5599,6 +5633,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid  WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_tools\')
@@ -5646,6 +5681,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_service\')
@@ -5693,6 +5729,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE ds.field_ds_agency_name_nid =$data->nid AND ds.field_ds_catlog_type_type IS NOT NULL AND WF.sid=10 AND n.status=1"));
@@ -5738,6 +5775,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 global $base_url;
 $total=db_result(db_query("SELECT max(WF.stamp) FROM content_type_dataset ds INNER JOIN workflow_node WF On WF.nid=ds.nid   where ds.field_ds_agency_name_nid=$data->nid AND  ds.field_ds_catlog_type_type IS NOT NULL  AND WF.sid=10  "));
@@ -6087,6 +6125,7 @@ return $default;
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_raw_data\')AND ds.field_ds_agency_name_nid =$data->nid AND  WF.sid=10 AND n.status=1"));
@@ -6131,6 +6170,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_document\')
@@ -6178,6 +6218,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_apps\')
@@ -6225,6 +6266,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid  WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_tools\')
@@ -6272,6 +6314,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count(*)FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE (ds.field_ds_catlog_type_type = \'catalog_type_data_service\')
@@ -6319,6 +6362,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 
 $total=db_result(db_query("SELECT count( DISTINCT ds.nid ) FROM content_type_dataset ds INNER JOIN content_type_agency a ON ds.field_ds_agency_name_nid = a.nid INNER JOIN workflow_node WF On WF.nid=ds.nid INNER JOIN node n on ds.nid=n.nid WHERE ds.field_ds_agency_name_nid =$data->nid AND ds.field_ds_catlog_type_type IS NOT NULL AND WF.sid=10 AND n.status=1"));
@@ -6364,6 +6408,7 @@ else return $total
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 0,
       'value' => '<?php
 global $base_url;
 $total=db_result(db_query("SELECT max(WF.stamp) FROM content_type_dataset ds INNER JOIN workflow_node WF On WF.nid=ds.nid   where ds.field_ds_agency_name_nid=$data->nid AND  ds.field_ds_catlog_type_type IS NOT NULL  AND WF.sid=10  "));
@@ -6396,7 +6441,7 @@ if($row->sub==null){ $sub_ag=\' IS NULL\' ;}
 
 else  {$sub_ag=" = $row->sub"; }
 
-$short_sub=db_result(db_query("SELECT  field_sa_subagency_short_name_value as sub FROM content_type_sub_agency sa where sa.field_sa_subagency_agency_nid=$data->nid  AND sa.nid $sub_ag "));	
+$short_sub=db_result(db_query("SELECT  field_sa_subagency_short_name_value as sub FROM content_type_sub_agency sa where  sa.nid $sub_ag "));	
 
 if($short_sub!=\'\') $short_name=\' (\'.$short_sub.\')\'; else $short_name=\'\';
 
@@ -6476,8 +6521,6 @@ return $date.$sub_agency;
     ),
   ));
   $handler->override_option('title', 'Agency Wise');
-  $handler->override_option('header_format', '3');
-  $handler->override_option('header_empty', 0);
   $handler->override_option('items_per_page', 0);
   $handler->override_option('style_options', array(
     'grouping' => '',

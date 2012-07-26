@@ -1,5 +1,4 @@
 <?php global $base_url, $site_name;
-if($base_url == "http://demodata.nic.in") { header("location: http://demodata.nic.in"); exit; }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language; ?>" xml:lang="<?php print $language->language; ?>">
 
@@ -20,7 +19,7 @@ if($base_url == "http://demodata.nic.in") { header("location: http://demodata.ni
   @import "<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/multistep.css?i";
 
   </style>
-  <title><?php print $head_title; ?></title>
+  <title>User Login | <?php echo variable_get('site_name', array()); ?></title>
   <?php print $head; ?>
   <link href="<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/dms-style.css" rel="alternate stylesheet" type="text/css" />
   <link href="<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/multistep.css" rel="alternate stylesheet" type="text/css" />

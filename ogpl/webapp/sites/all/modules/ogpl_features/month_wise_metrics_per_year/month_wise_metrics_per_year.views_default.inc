@@ -490,7 +490,7 @@ return $cat;
       'style_options' => array(),
       'wildcard' => 'all',
       'wildcard_substitution' => 'All',
-      'title' => '',
+      'title' => '%1',
       'breadcrumb' => '',
       'default_argument_type' => 'node',
       'default_argument' => '',
@@ -505,16 +505,15 @@ return $cat;
       'validate_user_roles' => array(
         2 => 0,
         10 => 0,
-        16 => 0,
+        18 => 0,
         11 => 0,
         3 => 0,
         9 => 0,
         12 => 0,
         4 => 0,
         6 => 0,
-        15 => 0,
         13 => 0,
-        14 => 0,
+        15 => 0,
       ),
       'relationship' => 'none',
       'default_options_div_prefix' => '',
@@ -524,14 +523,7 @@ return $cat;
       'validate_argument_node_type' => array(
         'agency' => 'agency',
         'faq' => 0,
-        'fusioncharts' => 0,
-        'imageflow' => 0,
-        'flags' => 0,
-        'geo_data' => 0,
-        'rotating_panel' => 0,
         'access_type_downloadable' => 0,
-        'access_type_embed_link' => 0,
-        'access_type_execute_upon_access' => 0,
         'catalog_type_data_apps' => 0,
         'catalog_type_data_service' => 0,
         'catalog_type_data_tools' => 0,
@@ -539,30 +531,56 @@ return $cat;
         'catalog_type_raw_data' => 0,
         'dataset' => 0,
         'geospatial_metadata' => 0,
-        'page' => 0,
         'policy_program_data_quality' => 0,
         'policy_program_open_government' => 0,
         'policy_program_privacy' => 0,
         'profile' => 0,
         'sector' => 0,
         'statistical_metadata' => 0,
-        'story' => 0,
-        'subject_keyword' => 0,
         'sub_agency' => 0,
-        'test' => 0,
+        'sub_sector' => 0,
+        'subject_keyword' => 0,
+        'target_audience' => 0,
+        'page' => 0,
+        'imageflow' => 0,
+        'country_data' => 0,
+        'state_data_site' => 0,
+        'rotating_panel' => 0,
+        'feedback_reply' => 0,
+        'feedback' => 0,
+        'block' => 0,
+        'feedback_review' => 0,
+        'story' => 0,
+        'theme_file_uploader' => 0,
         'upload_docs' => 0,
         'webform' => 0,
         'whats_new' => 0,
       ),
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
-      'validate_argument_vocabulary' => array(),
+      'validate_argument_vocabulary' => array(
+        1 => 0,
+        2 => 0,
+        3 => 0,
+        4 => 0,
+        5 => 0,
+      ),
       'validate_argument_type' => 'tid',
       'validate_argument_transform' => 0,
       'validate_user_restrict_roles' => 0,
       'validate_argument_php' => '',
       'override' => array(
         'button' => 'Override',
+      ),
+      'default_taxonomy_tid_term_page' => 0,
+      'default_taxonomy_tid_node' => 0,
+      'default_taxonomy_tid_limit' => 0,
+      'default_taxonomy_tid_vids' => array(
+        1 => 0,
+        2 => 0,
+        3 => 0,
+        4 => 0,
+        5 => 0,
       ),
     ),
   ));
@@ -939,6 +957,7 @@ if($result) return \'<h1>*</h1>\';
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 1,
       'value' => '<?php
 
 $avg_rating=variable_get(\'average_rating\',0);
@@ -952,7 +971,8 @@ $value=calculate_ratings($data->nid,$avg_rating,$avg_votes);
   $vote=$vote1[\'count\'];
   if($vote2[\'count\']>$vote) $vote=$vote2[\'count\'];
   if($vote3[\'count\']>$vote)$vote=$vote3[\'count\'];                 
-  		           
+  if($vote==1) $votes=\'<span>(\'.$vote.\' vote)</span>\';
+else 		           
   $votes=\'<span>(\'.$vote.\' votes)</span>\'; 
 return theme(\'fivestar_static\',$value).$votes;
 ?>',
@@ -3959,6 +3979,8 @@ return  $total.$sub_month;
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
+  $handler->override_option('header_format', '3');
+  $handler->override_option('header_empty', 0);
   $handler->override_option('empty', 'No Datasets published this month.');
   $handler->override_option('empty_format', '1');
   $handler->override_option('items_per_page', 0);
@@ -4760,8 +4782,6 @@ print \'<h1 class="metrics-visitorstats-table-heading fLeft">Month Wise</h1>\';
 		
 ?>
 ');
-  $handler->override_option('header_format', '3');
-  $handler->override_option('header_empty', 0);
   $handler->override_option('path', 'agency-publications/month-wise/month-wise-report-per-year/%');
   $handler->override_option('menu', array(
     'type' => 'none',
@@ -6346,8 +6366,6 @@ return  $total.$sub_month;
     ),
   ));
   $handler->override_option('title', 'Month Wise');
-  $handler->override_option('header_format', '3');
-  $handler->override_option('header_empty', 0);
   $handler->override_option('path', 'agency-publications/month-wise/month-wise-report-per-year/pdf/%');
   $handler->override_option('menu', array(
     'type' => 'none',

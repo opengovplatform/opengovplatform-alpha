@@ -1,3 +1,5 @@
+; $Id$
 name = VRM Feedback History
 description = Add a tab to display data from cck history table
 core = 6.x
+package = OGPL

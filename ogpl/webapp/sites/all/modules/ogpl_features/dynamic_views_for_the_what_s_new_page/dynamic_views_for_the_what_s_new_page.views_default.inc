@@ -16,6 +16,26 @@ function dynamic_views_for_the_what_s_new_page_views_default_views() {
   $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->override_option('relationships', array(
+    'field_ds_agency_name_nid' => array(
+      'label' => 'Agency Name',
+      'required' => 0,
+      'delta' => -1,
+      'id' => 'field_ds_agency_name_nid',
+      'table' => 'node_data_field_ds_agency_name',
+      'field' => 'field_ds_agency_name_nid',
+      'relationship' => 'none',
+    ),
+    'field_ds_sub_agency_nid' => array(
+      'label' => 'Sub Agency Name',
+      'required' => 0,
+      'delta' => -1,
+      'id' => 'field_ds_sub_agency_nid',
+      'table' => 'node_data_field_ds_sub_agency',
+      'field' => 'field_ds_sub_agency_nid',
+      'relationship' => 'none',
+    ),
+  ));
   $handler->override_option('fields', array(
     'title' => array(
       'label' => 'Title',
@@ -548,7 +568,7 @@ return "FROM_UNIXTIME(workflow_node.stamp) > date_sub(curdate(), interval 7 day)
      $sum=$sum+get_average_ratings($row->nid);
      $count++;
   }
-
+  
   $AR=$sum/$count;
   //print "AR=".$AR;
 
@@ -557,14 +577,14 @@ $result=db_query("select distinct(content_id) as nid from votingapi_vote V LEFT 
 
   $sum=0;
   while($row=db_fetch_object($result))
-  {
+  {   
      $sum=$sum+get_average_rating_votes($row->nid);
   }
   $AV=$sum/$count;
   $AV=round($AV);
 
  variable_set(\'average_rating\',$AR);
- variable_set(\'average_votes\',$AV);
+ variable_set(\'average_votes\',$AV); 
 ?>');
   $handler->override_option('header_format', '3');
   $handler->override_option('header_empty', 0);
@@ -588,6 +608,8 @@ print \'No datasets were uploaded in last \'.$view->args[0].\' days\';
       'field_ds_sub_agency_short_name_value' => 'field_ds_agency_short_name_value',
       'field_ds_sector_nid' => 'field_ds_sector_nid',
       'phpcode' => 'phpcode',
+      'field_agency_short_name_value' => 'field_agency_short_name_value',
+      'field_sa_subagency_short_name_value' => 'field_agency_short_name_value',
     ),
     'info' => array(
       'title' => array(
@@ -595,7 +617,6 @@ print \'No datasets were uploaded in last \'.$view->args[0].\' days\';
         'separator' => '<br/>',
       ),
       'field_ds_agency_short_name_value' => array(
-        'sortable' => 0,
         'separator' => '/',
       ),
       'field_ds_description_value' => array(
@@ -603,13 +624,20 @@ print \'No datasets were uploaded in last \'.$view->args[0].\' days\';
         'separator' => '',
       ),
       'field_ds_sub_agency_short_name_value' => array(
-        'sortable' => 0,
         'separator' => '',
       ),
       'field_ds_sector_nid' => array(
         'separator' => '',
       ),
       'phpcode' => array(
+        'separator' => '',
+      ),
+      'field_agency_short_name_value' => array(
+        'sortable' => 0,
+        'separator' => '/',
+      ),
+      'field_sa_subagency_short_name_value' => array(
+        'sortable' => 0,
         'separator' => '',
       ),
     ),
@@ -655,7 +683,7 @@ print \'No datasets were uploaded in last \'.$view->args[0].\' days\';
       ),
       'relationship' => 'none',
     ),
-    'field_ds_agency_short_name_value' => array(
+    'field_agency_short_name_value' => array(
       'label' => 'Agency/Sub-Agency',
       'alter' => array(
         'alter_text' => 0,
@@ -680,6 +708,7 @@ print \'No datasets were uploaded in last \'.$view->args[0].\' days\';
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 1,
       'link_to_node' => 0,
       'label_type' => 'custom',
       'format' => 'default',
@@ -690,10 +719,57 @@ print \'No datasets were uploaded in last \'.$view->args[0].\' days\';
         'multiple_reversed' => FALSE,
       ),
       'exclude' => 0,
-      'id' => 'field_ds_agency_short_name_value',
-      'table' => 'node_data_field_ds_agency_short_name',
-      'field' => 'field_ds_agency_short_name_value',
-      'relationship' => 'none',
+      'id' => 'field_agency_short_name_value',
+      'table' => 'node_data_field_agency_short_name',
+      'field' => 'field_agency_short_name_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'field_ds_agency_name_nid',
+    ),
+    'field_sa_subagency_short_name_value' => array(
+      'label' => 'Sub-Agency Short Name',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'widget',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_sa_subagency_short_name_value',
+      'table' => 'node_data_field_sa_subagency_short_name',
+      'field' => 'field_sa_subagency_short_name_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'field_ds_sub_agency_nid',
     ),
     'field_ds_description_value' => array(
       'label' => 'Description',
@@ -737,46 +813,6 @@ print \'No datasets were uploaded in last \'.$view->args[0].\' days\';
       'override' => array(
         'button' => 'Use default',
       ),
-    ),
-    'field_ds_sub_agency_short_name_value' => array(
-      'label' => 'Agency/Sub-Agency',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'absolute' => 0,
-        'link_class' => '',
-        'alt' => '',
-        'rel' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'link_to_node' => 0,
-      'label_type' => 'custom',
-      'format' => 'default',
-      'multiple' => array(
-        'group' => TRUE,
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_reversed' => FALSE,
-      ),
-      'exclude' => 0,
-      'id' => 'field_ds_sub_agency_short_name_value',
-      'table' => 'node_data_field_ds_sub_agency_short_name',
-      'field' => 'field_ds_sub_agency_short_name_value',
-      'relationship' => 'none',
     ),
     'field_ds_sector_nid' => array(
       'label' => 'Category',
@@ -846,6 +882,7 @@ print \'No datasets were uploaded in last \'.$view->args[0].\' days\';
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 1,
       'value' => '<?php
 
 $avg_rating=variable_get(\'average_rating\',0);
@@ -858,9 +895,11 @@ $value=calculate_ratings($data->nid,$avg_rating,$avg_votes);
   $vote3=rate_get_results(\'node\', $data->nid, 3);
   $vote=$vote1[\'count\'];
   if($vote2[\'count\']>$vote) $vote=$vote2[\'count\'];
-  if($vote3[\'count\']>$vote)$vote=$vote3[\'count\'];
-
-  $votes=\'<span> (\'.$vote.\' votes)</span>\';
+  if($vote3[\'count\']>$vote)$vote=$vote3[\'count\'];                 
+  		           
+  if($vote==1)  $votes=\'<span style="margin-left: 20px;">(\'.$vote.\' vote)</span>\';        
+  else   
+  $votes=\'<span style="margin-left: 20px;">(\'.$vote.\' votes)</span>\';
 return theme(\'fivestar_static\',$value).$votes;
 ?>',
       'exclude' => 0,

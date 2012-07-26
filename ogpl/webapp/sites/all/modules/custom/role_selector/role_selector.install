@@ -1,0 +1,42 @@
+<?php
+function role_selector_install() {
+  drupal_install_schema('role_selector');
+  db_query('INSERT INTO {role_selector_users_roles} SELECT * FROM {users_roles}');
+}
+
+function role_selector_uninstall() {
+  db_query('REPLACE INTO {users_roles} SELECT * FROM {role_selector_users_roles}');
+  drupal_uninstall_schema('role_selector');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function role_selector_schema() {
+  $schema['role_selector_users_roles'] = array(
+    'description' => 'Maps users to roles.',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Primary Key: {users}.uid for user.',
+      ),
+      'rid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Primary Key: {role}.rid for role.',
+      ),
+    ),
+    'primary key' => array('uid', 'rid'),
+    'indexes' => array(
+      'rid' => array('rid'),
+    ),
+  );
+
+  return $schema;
+}
+

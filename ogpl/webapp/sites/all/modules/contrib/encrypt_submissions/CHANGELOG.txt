@@ -1,0 +1,28 @@
+; $Id$ 
+===================
+Changelog for Encrypt Submissions
+For Drupal 6.x
+===================
+
+
+2-26-2012
+Changes were made to prevent Drupal's caching system from caching
+the URL used to acquire keys, as per issue:
+http://drupal.org/node/1457358
+Specifically, a random string is added in javascript to the URL
+which requests keys.
+
+
+-- Previous releases:
+
+10/14/2011
+Found an issue (possible bug) with the way the jQuery was being
+asynchronously loaded, so I decided to package jQuery 1.4.4 with the
+module and load it in the standard way.
+
+This allows two forms on the same page to both work.
+
+
+10/13/2011
+Initial commit of backport from 7.x branch.
+Initial backport work done by user k8n (http://drupal.org/user/243127)

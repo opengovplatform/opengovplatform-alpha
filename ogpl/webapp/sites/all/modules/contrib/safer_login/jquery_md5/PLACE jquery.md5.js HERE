@@ -1,6 +1,0 @@
-; $Id: PLACE\040jquery.md5.js\040HERE,v 1.2 2010/09/18 17:05:02 richardp Exp $
-
-If you are using Libraries API, you may copy the plugin file
-to /sites/all/libraries/jquery_md5/ instead.
-
-Read the README.txt file for more information.  

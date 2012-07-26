@@ -598,6 +598,10 @@ color:#000000 !important
 .containers #comments {
     background: none repeat scroll 0 0 #333333;
 }
+#comment-form
+{
+ background: none repeat scroll 0 0 #333333;
+}
 .embed-block {
     background: none repeat scroll 0 0 #333333;
 }

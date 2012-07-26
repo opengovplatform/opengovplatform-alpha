@@ -5,11 +5,11 @@ require 'rubygems'
 require 'fileutils'
 require 'lib/selenium_support'
 # Load WIN32OLE library
-require 'win32ole'
-require 'Win32API'
+#require 'win32ole'
+#require 'Win32API'
 #Load the win32 library
-require 'win32/clipboard'
-include Win32
+#require 'win32/clipboard'
+#include Win32
 require 'InputRepository/Test_20_CMS_Block_workflow_input.rb'
 require 'InputRepository/Config.rb'
 require 'lib/NIC_Lib.rb'
@@ -32,12 +32,13 @@ describe "CMS Block workflow (Creation/Approval/Publishing)" do
 
         @browser1.goto("#{$Site_URL}node/add/block")
         @browser1.text_field(:id, "edit-field-instructions-0-value").set($instruction)
-        @browser1.frame(:title => 'Rich Text AreaPress ALT-F10 for toolbar. Press ALT-0 for help').send_keys "#{$body}"
-        @browser1.select_list(:id, "edit-field-content-creator-uid-uid").select($CMS_content_creater_email)
+        #@browser1.frame(:title => 'Rich Text AreaPress ALT-F10 for toolbar. Press ALT-0 for help').send_keys "#{$body}"
+        @browser1.textarea(:id, "edit-body").set($body)
+	@browser1.select_list(:id, "edit-field-content-creator-uid-uid").select($CMS_content_creater_email)
         @browser1.select_list(:id, "edit-field-moderator-uid-uid").select($CMS_moderator_email)
         @browser1.text_field(:id,"edit-field-expiry-date-0-value-datepicker-popup-0").set($date)
         @browser1.browser.text_field(:id, "edit-field-no-ofdays-0-value").set($days)
-        @browser1.button(:value,"Save").click
+        @browser1.button(:value,"Submit").click
         sleep 3
         @browser1.text.should include('Title field is required')
         puts "Validation completed"
@@ -59,7 +60,7 @@ describe "CMS Block workflow (Creation/Approval/Publishing)" do
    end
 
    it "Save Block" do
-      @browser1.button(:value,"Save").click
+      @browser1.button(:value,"Submit").click
       sleep 2
       @browser1.text.should include("Block #{$block_title} has been created")
       puts "Save completed"
@@ -80,7 +81,7 @@ describe "CMS Block workflow (Creation/Approval/Publishing)" do
       puts $node_val
 
       @browser1.text_field(:id, "edit-field-instructions-0-value").set($revised_inst)
-      @browser1.button(:value,"Save").click
+      @browser1.button(:value,"Submit").click
       sleep 2
       @browser1.text.should include("#{$revised_inst}")
       puts "Edit completed"

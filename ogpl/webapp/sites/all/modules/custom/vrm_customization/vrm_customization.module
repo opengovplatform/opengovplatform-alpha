@@ -53,8 +53,8 @@ function vrm_customization_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL)
         global $user;
         $referred_node = node_load($node->field_feedback_id[0]['nid']);
         $params['pet_from'] = $user->mail;
-        $params['pet_to'] = $node->field_reply_to[0]['value'];
-        $params['pet_cc'] = $node->field_reply_cc[0]['value'];
+        $params['pet_to'] = $node->field_reply_to[0]['email'];
+        $params['pet_cc'] = $node->field_reply_cc[0]['email'];
         $params['pet_uid'] = $user->uid;
         $params['assignee-comments'] = nl2br($node->field_feedback_reply_body[0]['value']);
         $params['assignee-subject'] = $node->title;
@@ -313,10 +313,66 @@ function vrm_customization_form_alter($form, &$form_state, $form_id)
             $form['#access'] = false;
             $breadcrumb[] = l('Home', '<front>');
             drupal_set_breadcrumb($breadcrumb);
-            drupal_access_denied();
+            drupal_set_message('Only Assigned User can add Reply or Review for a feedback. ','error',FALSE);
+			drupal_access_denied();
         }
 
     }
+	
+	drupal_add_js(drupal_get_path('module', 'vrm_customization') . '/vrm_customization.js');
+    switch ($form_id) {
+        case 'comment_form':
+            $max_len = 3000;
+            $node_id = $form['nid']['#value'];
+            $node_obj = node_load($node_id);
+             if (($node_obj->type == 'dataset') && (!user_access('administer comments'))) {
+			    drupal_add_js(drupal_get_path('theme', 'ogpl_css2') . '/js/validation.js');	
+				drupal_add_js(drupal_get_path('theme', 'ogpl_css3') . '/js/validation.js');	
+
+				$form['comment_filter']['comment']['#description'] ='<span id="discuss-textarea-limit-count"> ' . $max_len . ' </span> characters left.';         
+				$form['comment_filter']['comment']['#attributes'] = array('onkeydown' => 'return textCounter(3000,"edit-comment","discuss-textarea-limit-count")', 'onkeyup' => 'return textCounter(3000,"edit-comment","discuss-textarea-limit-count")', 'id' => 'edit-comment', 'maxlength' => '3000');
+               if(arg(3)=='')
+				drupal_set_title($node_obj->title); 
+				else
+			    $form['#prefix']='<div class="messages error clientside commentsError" id="comment-form-errors" style="display: none;"><ul><li style="display:none">No Errors</li></ul></div>';
+
+            } 
+            if ($node_obj->type == "feedback") {
+                $path = 'node/' . $node_id . '/type/note';
+                $form['#redirect'] = $path;
+
+                $form['subject'] = array('#title' => '', '#default_value' => '');
+                $form['name'] = array('#title' => '', '#default_value' => '', '#required' => FALSE);
+                $form['comment_filter']['comment'] = array(
+                    '#type' => 'textarea',
+                    '#title' => t('Add Note:'),
+                    '#rows' => 15,
+                    '#description' => '<span id="note-textarea-limit-count"> ' . $max_len . ' </span> characters left.',
+                    '#required' => TRUE,
+                    '#attributes' => array('onkeydown' => 'textNoteCounters(3000,"edit-comment")', 'onkeyup' => 'textNoteCounters(3000,"edit-comment")', 'id' => 'edit-comment')
+                );
+
+                $form['_author'] = array('#title' => '', '#value' => '');
+                $form['reset'] = array(
+                    '#value' => '<input type="reset" value="Clear" class="form-submit" onclick="resetTextNoteCounters(3000);"> ', '#weight' => 100,
+                );
+				$path = drupal_get_path_alias($_GET['q']);
+				$path = explode('/', $path);
+				$page=$path[count($path)-1];
+				if($page=='note')
+				{
+					drupal_set_title('Notes');
+					vrm_customization_create_breadcrumb('notes');
+				}
+				else
+				{
+					vrm_customization_create_breadcrumb('view');
+				}
+			}
+
+            break;
+    }
+
 }
 
 function vrm_customization_bulk_update_validate($form, &$form_state)
@@ -904,7 +960,7 @@ function vrm_customization_change_form($form, &$form_state)
             $form['cancel'] = null;
             $form['buttons']['cancel'] = null;
             $form['buttons']['submit']['#attributes'] = array('title' => 'Click here to submit the form');
-            $form['#redirect'] = array('ratings/ack', array('destination' => drupal_get_path_alias($_GET['q'])));
+            $form['#redirect'] = array('ratings/ack');
             break;
         case FEEDBACK_CONTACT_US:
             $contact_options = array();
@@ -1060,8 +1116,8 @@ function vrm_customization_change_feedback_reply_form($form, &$form_state)
 
     $form['field_feedback_id']['nid']['nid']['#type'] = 'hidden';
     $form['field_feedback_id']['nid']['nid']['#value'] = $node->nid;
-    $form['field_reply_to'][0]['value']['#value'] = $node->field_email[0]['email'];
-    $form['field_reply_cc'][0]['value']['#value'] = $user->mail;
+    $form['field_reply_to'][0]['email']['#value'] = $node->field_email[0]['email'];
+    $form['field_reply_cc'][0]['email']['#value'] = $user->mail;
     $form['field_feedback_reply_body'][0]['value']['#description'] = '<span id="feedback-textarea-limit-count">3000</span> characters left.';
     $form['field_feedback_reply_body'][0]['value']['#attributes'] = array('id' => 'comment', 'onkeydown' => 'return textCounter(3000,"edit-field-feedback-reply-body-0-value")', 'onkeyup' => 'return textCounter(3000,"edit-field-feedback-reply-body-0-value")', 'maxlength' => '3000');
     $form['buttons']['cancel']['#attributes'] = array('onClick' => "location.href = '$base_url/node/' + location.href.split('/').pop() + '/edit';return false;");
@@ -1410,7 +1466,7 @@ function vrm_customization_mail_alter($message)
     }
 }
 
-function vrm_customization_pet_substitutions_alter(&$substitutions, &$params)
+function vrm_customization_pet_substitutions_alter(&$substitutions, $params)
 {
     // Replace the tokens in mails.
     $replace = array('assignee-comments', 'feedback_date', 'feedback_body');

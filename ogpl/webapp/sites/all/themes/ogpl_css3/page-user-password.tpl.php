@@ -1,5 +1,4 @@
 <?php global $base_url, $site_name;
-if($base_url == "http://demodata.nic.in") { header("location: http://demodata.nic.in"); exit; }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language; ?>" xml:lang="<?php print $language->language; ?>">
 
@@ -20,7 +19,7 @@ if($base_url == "http://demodata.nic.in") { header("location: http://demodata.ni
   @import "<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/multistep.css?i";
 
   </style>
-  <title><?php print $head_title; ?></title>
+  <title>User Login | <?php echo variable_get('site_name', array()); ?></title>
   <?php print $head; ?>
   <link href="<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/dms-style.css" rel="alternate stylesheet" type="text/css" />
   <link href="<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/css/multistep.css" rel="alternate stylesheet" type="text/css" />
@@ -47,18 +46,18 @@ if($base_url == "http://demodata.nic.in") { header("location: http://demodata.ni
       </div>
 
       <!-- header-top row: width = grid_width -->
-      <div id="header-top-wrapper" class="header-top-wrapper full-width">
-	<div id="header-top" class="header-top row grid16-16">
-	<div id="header-top-inner" class="header-top-inner inner clearfix">
-  
-	<div id="block-blockify-blockify-logo" class="block block-blockify odd first last grid16-3 logo-block">
-  	<div class="inner clearfix">
-            <div class="content clearfix">
-      		<a href="<?php echo $base_url; ?>" id="logo" rel="home" title="Return to the OpenGov Platform DMS home page" class="active"><img src="<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/images/dms/logo.png" alt="OpenGov Platform DMS logo" title="" width="150" height="124" /></a>
-  		</div><!-- /block-inner -->
-	</div><!-- /block -->
-	</div><!-- /header-top-inner -->
-	</div><!-- /header-top -->
+    <div id="header-top-wrapper" class="header-top-wrapper full-width">
+		<div id="header-top" class="header-top row grid16-16">
+			<div id="header-top-inner" class="header-top-inner inner clearfix">
+				<div id="block-blockify-blockify-logo" class="block block-blockify odd first last grid16-3 logo-block">
+					<div class="inner clearfix">
+						<div class="content clearfix">
+						<a href="<?php echo $base_url; ?>" id="logo" rel="home" title="Return to the OpenGov Platform DMS home page" class="active"><img src="<?php echo $base_url.'/'.drupal_get_path('theme', 'ogpl_css3');?>/images/dms/logo.png" alt="OpenGov Platform DMS logo" title="" width="150" height="124" /></a>
+						</div>
+					</div><!-- /block-inner -->
+				</div><!-- /block -->
+			</div><!-- /header-top-inner -->
+		</div><!-- /header-top -->
 	</div><!-- /header-top-wrapper -->
 
       <!-- header-group row: width = grid_width -->             

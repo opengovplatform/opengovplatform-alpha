@@ -1,4 +1,5 @@
-; $Id
+; $Id$
 name = Web dataset preview and print page
 description = This module provides user to see the dataset preview for the embed page and also for printing the page.
 core = 6.x
+package = OGPL

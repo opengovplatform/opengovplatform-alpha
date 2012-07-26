@@ -2,3 +2,4 @@
 name = Web Site Config
 description = This module is used to configure header image for the site
 core = 6.x
+package = OGPL
